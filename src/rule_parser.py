@@ -1,6 +1,6 @@
 from __future__ import absolute_import, print_function, unicode_literals
 
-from pyparsing import alphanums, alphas, dblQuotedString, delimitedList, Dict, Forward, Group, Keyword, Literal, OneOrMore, printables, quotedString, removeQuotes, stringEnd, stringStart, Word
+from pyparsing import alphanums, alphas, Forward, Group, Keyword, OneOrMore, printables, quotedString, removeQuotes, stringEnd, stringStart, Word
 
 RULE = Forward()
 
