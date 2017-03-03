@@ -8,9 +8,9 @@ gi.require_version('Gtk', '3.0')
 gi.require_version('Notify', '0.7')
 from gi.repository import AppIndicator3, Gtk, Notify
 
-from src.new_device_window import USBGuardNewDeviceApplication
-from src.usbguard_dbus import Rule, USBGuardDBUS
-from src.usbguard_gnome_window import USBGuardGnomeApplication
+from new_device_window import USBGuardNewDeviceApplication
+from usbguard_dbus import Rule, USBGuardDBUS
+from usbguard_gnome_window import USBGuardGnomeApplication
 
 # Gdk.threads_init()
 APPINDICATOR_ID = 'USBGuardGnomeApplet'
