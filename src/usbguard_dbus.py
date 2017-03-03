@@ -38,7 +38,7 @@ class USBGuardDBUS(object):
         print("DevicePolicyChanged: {}".format(attributes))
         new_device = Device.generate_device([id, device_rule])
         for callback in self.device_policy_changed_callbacks:
-            callback(new_device)
+            callback(new_device, rule_id)
 
     def register_device_policy_changed_callback(self, callback):
         self.device_policy_changed_callbacks.append(callback)
