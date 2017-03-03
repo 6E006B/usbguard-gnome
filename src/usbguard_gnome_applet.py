@@ -35,6 +35,7 @@ class USBGuardAppIndicator(object):
         self.device_policy_changed_ids = []
 
     def new_device_callback(self, device, rule_id):
+        # user response to a previous notification will raise a new policy changed event, therefore ignore it
         if rule_id in self.device_policy_changed_ids:
             self.device_policy_changed_ids.remove(rule_id)
         else:
