@@ -1,3 +1,5 @@
+from __future__ import absolute_import, print_function, unicode_literals
+
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gio, GObject, Gtk, Pango
