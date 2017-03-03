@@ -9,7 +9,7 @@ gi.require_version('Notify', '0.7')
 from gi.repository import AppIndicator3, Gtk, Notify
 
 from src.new_device_window import USBGuardNewDeviceApplication
-from src.usbguard_dbus import USBGuardDBUS
+from src.usbguard_dbus import Rule, USBGuardDBUS
 from src.usbguard_gnome_window import USBGuardGnomeApplication
 
 # Gdk.threads_init()
@@ -19,6 +19,7 @@ APPINDICATOR_ID = 'USBGuardGnomeApplet'
 class USBGuardAppIndicator(object):
 
     usbguard_app = None
+    notification = None
 
     def __init__(self):
         Notify.init(APPINDICATOR_ID)
@@ -31,10 +32,19 @@ class USBGuardAppIndicator(object):
         self.update_menu()
         self.usbguard_dbus = USBGuardDBUS.get_instance()
         self.usbguard_dbus.register_device_policy_changed_callback(self.new_device_callback)
+        self.device_policy_changed_ids = []
 
-    def new_device_callback(self, device):
-        app = USBGuardNewDeviceApplication(device, self.usbguard_dbus)
-        app.run()
+    def new_device_callback(self, device, rule_id):
+        if rule_id in self.device_policy_changed_ids:
+            self.device_policy_changed_ids.remove(rule_id)
+        else:
+            description = device.get_class_description_string()
+            self.notification = Notify.Notification.new("New USB device inserted", description, '/home/chriz/repositories/usbguard/src/GUI.Qt/resources/usbguard-icon.svg')
+            self.notification.add_action('allow', 'Allow', self.on_allow_clicked, device)
+            self.notification.add_action('block', 'Block', self.on_allow_clicked, device)
+            self.notification.show()
+        # app = USBGuardNewDeviceApplication(device, self.usbguard_dbus)
+        # app.run()
 
     def run(self):
         Gtk.main()
@@ -76,6 +86,18 @@ class USBGuardAppIndicator(object):
 
     def on_open(self, _):
         self.open_window()
+
+    def on_allow_clicked(self, notification_object, action_name, device):
+        print("on_allow_clicked() for device {}".format(device))
+        rule_id = self.usbguard_dbus.apply_device_policy(device.number, Rule.ALLOW, False)
+        self.device_policy_changed_ids.append(rule_id)
+        self.notification = None
+
+    def on_block_clicked(self, notification_object, action_name, device):
+        print("on_block_clicked()")
+        rule_id = self.usbguard_dbus.apply_device_policy(device.number, Rule.BLOCK, False)
+        self.device_policy_changed_ids.append(rule_id)
+        self.notification = None
 
 
 def main():
