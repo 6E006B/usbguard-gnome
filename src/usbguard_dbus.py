@@ -1,17 +1,19 @@
 import dbus
-
 from dbus.mainloop.glib import DBusGMainLoop
-
+from enum import IntEnum
 
 from device import Device
+
+
+class Rule(IntEnum):
+    ALLOW = 0
+    BLOCK = 1
+    REJECT = 2
 
 
 class USBGuardDBUS(object):
 
     INSTANCE = None
-    RULES = [
-        'allow', 'block', 'reject'
-    ]
 
     @classmethod
     def get_instance(cls):
@@ -59,8 +61,8 @@ class USBGuardDBUS(object):
         return rules
 
     def apply_device_policy(self, device_id, rule, permanent):
-        assert(rule in self.RULES)
-        rule_id = self.devices_interface.applyDevicePolicy(device_id, self.RULES.index(rule), permanent)
+        assert(isinstance(rule, Rule))
+        rule_id = self.devices_interface.applyDevicePolicy(device_id, rule, permanent)
         return rule_id
 
 if __name__ == "__main__":

@@ -2,7 +2,7 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gio, GObject, Gtk, Pango
 
-from usbguard_dbus import USBGuardDBUS
+from usbguard_dbus import Rule, USBGuardDBUS
 
 
 class USBGuardNewDeviceWindow(Gtk.ApplicationWindow):
@@ -113,10 +113,10 @@ class USBGuardNewDeviceApplication(Gtk.Application):
     def on_switch_activated(self, switch, gparam):
         if switch.get_active():
             state = "on"
-            rule = 'allow'
+            rule = Rule.ALLOW
         else:
             state = "off"
-            rule = 'block'
+            rule = Rule.BLOCK
         print("Switch was turned", state)
         self.usbguard_dbus.apply_device_policy(self.device.number, rule, False)
 
