@@ -19,7 +19,7 @@ APPINDICATOR_ID = 'USBGuardGnomeApplet'
 class USBGuardAppIndicator(object):
 
     usbguard_app = None
-    notification = None
+    notifications = {}
 
     def __init__(self):
         Notify.init(APPINDICATOR_ID)
@@ -40,12 +40,17 @@ class USBGuardAppIndicator(object):
             self.device_policy_changed_ids.remove(rule_id)
         else:
             description = device.get_class_description_string()
-            self.notification = Notify.Notification.new("New USB device inserted", description, '/home/chriz/repositories/usbguard/src/GUI.Qt/resources/usbguard-icon.svg')
-            self.notification.add_action('allow', 'Allow', self.on_allow_clicked, device)
-            self.notification.add_action('block', 'Block', self.on_allow_clicked, device)
-            self.notification.show()
+            notification = Notify.Notification.new("New USB device inserted", description, '/home/chriz/repositories/usbguard/src/GUI.Qt/resources/usbguard-icon.svg')
+            notification.add_action('allow', 'Allow', self.on_allow_clicked, device)
+            notification.add_action('block', 'Block', self.on_allow_clicked, device)
+            notification.add_action('default', 'default', self.on_notification_clicked, device)
+            notification.set_timeout(Notify.EXPIRES_NEVER) # TODO: maybe make configurable
+            notification.connect('closed', self.on_notification_closed)
+            notification.set_category("device.added")
+            notification.show()
+            self.notifications[notification.props.id] = notification
         # app = USBGuardNewDeviceApplication(device, self.usbguard_dbus)
-        # app.run()
+        # rule_id = app.run()
 
     def run(self):
         Gtk.main()
@@ -88,17 +93,25 @@ class USBGuardAppIndicator(object):
     def on_open(self, _):
         self.open_window()
 
-    def on_allow_clicked(self, notification_object, action_name, device):
+    def on_allow_clicked(self, notification, action_name, device):
         print("on_allow_clicked() for device {}".format(device))
         rule_id = self.usbguard_dbus.apply_device_policy(device.number, Rule.ALLOW, False)
         self.device_policy_changed_ids.append(rule_id)
-        self.notification = None
+        self.notifications[notification.props.id] = None
 
-    def on_block_clicked(self, notification_object, action_name, device):
+    def on_block_clicked(self, notification, action_name, device):
         print("on_block_clicked()")
         rule_id = self.usbguard_dbus.apply_device_policy(device.number, Rule.BLOCK, False)
         self.device_policy_changed_ids.append(rule_id)
-        self.notification = None
+        self.notifications[notification.props.id] = None
+
+    def on_notification_clicked(self, notification, action_name, device):
+        app = USBGuardNewDeviceApplication(device, self.usbguard_dbus)
+        rule_id = app.run()
+        self.notifications[notification.props.id] = None
+
+    def on_notification_closed(self, notification):
+        self.notifications[notification.props.id] = None
 
 
 def main():
