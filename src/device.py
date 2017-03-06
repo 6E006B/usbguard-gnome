@@ -55,6 +55,9 @@ class Device(object):
     def get_class_description_string(self):
         return "\n".join(self.get_class_description_set())
 
+    def get_interfaces(self):
+        return set(self.with_interface)
+
     def is_allowed(self):
         return self.rule.lower() == "allow"
 
@@ -71,7 +74,7 @@ class Device(object):
             self.id,
             self.name,
             self.via_port,
-            "\n".join(self.with_interface),
+            "\n".join(self.get_interfaces()),
             self.get_class_description_string(),
         ]
 
