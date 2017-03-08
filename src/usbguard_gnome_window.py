@@ -9,7 +9,7 @@ from gi.repository import Gio, Gtk, Pango
 from usbguard_dbus import USBGuardDBUS
 
 
-class USBGuardGnomeWindow(Gtk.ApplicationWindow):
+class USBGuardGnomeWindowExpert(Gtk.ApplicationWindow):
 
     DEVICES_LIST_COLUMNS = [
         'number', 'rule', 'id', 'name', 'port', 'interface', 'description'
@@ -24,14 +24,13 @@ class USBGuardGnomeWindow(Gtk.ApplicationWindow):
             devices_list_model.append(device.as_list())
 
         view = Gtk.TreeView(model=devices_list_model)
-        # for each column
         for i in range(len(self.DEVICES_LIST_COLUMNS)):
             # cellrenderer to render the text
             cell = Gtk.CellRendererText()
-            # the text in the first column should be in boldface
-            if i == 0:
-                cell.props.weight_set = True
-                cell.props.weight = Pango.Weight.BOLD
+            # # the text in the first column should be in boldface
+            # if i == 0:
+            #     cell.props.weight_set = True
+            #     cell.props.weight = Pango.Weight.BOLD
             # the column is created
             col = Gtk.TreeViewColumn(self.DEVICES_LIST_COLUMNS[i], cell, text=i)
             # and it is appended to the treeview
@@ -40,9 +39,9 @@ class USBGuardGnomeWindow(Gtk.ApplicationWindow):
         # when a row is selected, it emits a signal
         # view.get_selection().connect("changed", self.on_changed)
 
-        # the label we use to show the selection
-        self.label = Gtk.Label()
-        self.label.set_text("")
+        # # the label we use to show the selection
+        # self.label = Gtk.Label()
+        # self.label.set_text("")
 
         # a grid to attach the widgets
         grid = Gtk.Grid()
@@ -62,37 +61,23 @@ class USBGuardGnomeWindow(Gtk.ApplicationWindow):
         Gtk.ApplicationWindow.__init__(self, title='USBGuard Gnome Window', application=app)
 
     def init_devices_list(self, devices_list):
-        devices_list_model = Gtk.ListStore(int, str, str, str, str, str, str)
+        self.devices_list_model = Gtk.ListStore(int, str, str, str, str, str, str)
         for device in devices_list:
-            devices_list_model.append(device.as_list())
+            self.devices_list_model.append(device.as_list())
 
-        view = Gtk.TreeView(model=devices_list_model)
-        # for each column
+        view = Gtk.TreeView(model=self.devices_list_model)
         for i in range(len(self.DEVICES_LIST_COLUMNS)):
-            # cellrenderer to render the text
             cell = Gtk.CellRendererText()
             # the text in the first column should be in boldface
             if i == 0:
                 cell.props.weight_set = True
                 cell.props.weight = Pango.Weight.BOLD
-            # the column is created
             col = Gtk.TreeViewColumn(self.DEVICES_LIST_COLUMNS[i], cell, text=i)
-            # and it is appended to the treeview
             view.append_column(col)
 
-        # when a row is selected, it emits a signal
-        # view.get_selection().connect("changed", self.on_changed)
 
-        # the label we use to show the selection
-        self.label = Gtk.Label()
-        self.label.set_text("")
-
-        # a grid to attach the widgets
         grid = Gtk.Grid()
         grid.attach(view, 0, 0, 1, 1)
-        grid.attach(self.label, 0, 1, 1, 1)
-
-        # attach the grid to the window
         self.add(grid)
 
 
