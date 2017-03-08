@@ -49,8 +49,6 @@ class USBGuardAppIndicator(object):
             notification.set_category("device.added")
             notification.show()
             self.notifications[notification.props.id] = notification
-        # app = USBGuardNewDeviceApplication(device, self.usbguard_dbus)
-        # rule_id = app.run()
 
     def run(self):
         Gtk.main()
@@ -70,7 +68,6 @@ class USBGuardAppIndicator(object):
 
     def open_window(self):
         self.execute_open_window()
-        # Notify.Notification.new("USBGuard Applet", "message", None).show()
 
     def quit(self):
         Notify.uninit()
