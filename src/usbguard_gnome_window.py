@@ -106,11 +106,15 @@ class USBGuardGnomeApplication(Gtk.Application):
 
         # option "quit"
         quit_action = Gio.SimpleAction.new("quit", None)
-        quit_action.connect("activate", self.quit_cb)
+        quit_action.connect("activate", self.on_quit_clicked)
         self.add_action(quit_action)
 
-    def quit_cb(self, action, parameter):
+    def on_quit_clicked(self, action, parameter):\
+        self.execute_quit()
+
+    def execute_quit(self):
         print("You have quit.")
+        self.window.close()
         self.quit()
 
 

@@ -78,13 +78,13 @@ class USBGuardAppIndicator(object):
             self.usbguard_app = USBGuardGnomeApplication()
             self.usbguard_app.run()
         else:
-            self.usbguard_app.quit()
+            self.usbguard_app.execute_quit()
             self.usbguard_app = None
         self.update_menu()
 
     def on_quit(self, _):
         if self.usbguard_app is not None:
-            self.usbguard_app.quit()
+            self.usbguard_app.execute_quit()
         self.quit()
 
     def on_open(self, _):
