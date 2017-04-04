@@ -56,6 +56,14 @@ class USBGuardDBUS(object):
         print(repr(devices_list))
         return devices_list
 
+    def get_device(self, device_number):
+        device = None
+        devices = self.devices_interface.listDevices('match')
+        for device_struct in devices:
+            if int(device_struct[0]) == int(device_number):
+                device = Device.generate_device(device_struct)
+        return device
+
     def get_all_rules(self):
         rules = self.policy_interface.listRules("")
         for rule in rules:
