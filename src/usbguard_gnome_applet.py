@@ -23,6 +23,8 @@ class USBGuardAppIndicator(object):
 
     usbguard_app = None
     notifications = {}
+    screensaver_active = False
+    new_devices_on_screensaver = set()
 
     def __init__(self):
         Notify.init(APPINDICATOR_ID)
@@ -47,16 +49,32 @@ class USBGuardAppIndicator(object):
         if rule_id in self.device_policy_changed_ids:
             self.device_policy_changed_ids.remove(rule_id)
         else:
-            description = device.get_class_description_string()
-            notification = Notify.Notification.new("New USB device inserted", description, '/home/chriz/repositories/usbguard/src/GUI.Qt/resources/usbguard-icon.svg')
-            notification.add_action('allow', 'Allow', self.on_allow_clicked, device)
-            notification.add_action('block', 'Block', self.on_allow_clicked, device)
-            notification.add_action('default', 'default', self.on_notification_clicked, device)
-            notification.set_timeout(Notify.EXPIRES_NEVER) # TODO: maybe make configurable
-            notification.connect('closed', self.on_notification_closed)
+            if self.screensaver_active:
+                self.new_devices_on_screensaver.add(device)
+            else:
+                description = device.get_class_description_string()
+                notification = Notify.Notification.new("New USB device inserted", description, self.USBGUARD_ICON_PATH)
+                notification.add_action('allow', 'Allow', self.on_allow_clicked, device)
+                notification.add_action('block', 'Block', self.on_allow_clicked, device)
+                notification.add_action('default', 'default', self.on_notification_clicked, device)
+                notification.set_timeout(Notify.EXPIRES_NEVER) # TODO: maybe make configurable
+                notification.connect('closed', self.on_notification_closed)
+                notification.set_category("device.added")
+                notification.show()
+                self.notifications[notification.props.id] = notification
+
+    def screensaver_active_changed_callback(self, active):
+        print("screensaver is now: {}".format(active))
+        self.screensaver_active = active
+        if not self.screensaver_active and self.new_devices_on_screensaver:
+            title = "{} USB devices connected during Screensaver".format(len(self.new_devices_on_screensaver))
+            description = "{} USB devices connected during Screensaver:".format(len(self.new_devices_on_screensaver))
+            for device in self.new_devices_on_screensaver:
+                description += "\n{}: {}".format(device.number, device.get_class_description_string())
+            notification = Notify.Notification.new(title, description, self.USBGUARD_ICON_PATH)
             notification.set_category("device.added")
             notification.show()
-            self.notifications[notification.props.id] = notification
+            self.new_devices_on_screensaver = set()
 
     def run(self):
         Gtk.main()
