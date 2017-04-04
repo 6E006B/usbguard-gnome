@@ -1,3 +1,5 @@
+# -*- coding: utf8 -*-
+
 from __future__ import absolute_import, print_function, unicode_literals
 
 from pyparsing import alphanums, alphas, Forward, Group, Keyword, OneOrMore, printables, quotedString, removeQuotes, stringEnd, stringStart, Word
