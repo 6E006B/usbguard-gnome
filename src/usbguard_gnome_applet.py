@@ -9,6 +9,7 @@ gi.require_version('Notify', '0.7')
 from gi.repository import AppIndicator3, Gtk, Notify
 
 from new_device_window import USBGuardNewDeviceApplication
+from screensaver_dbus import ScreensaverDBUS
 from usbguard_dbus import Rule, USBGuardDBUS
 from usbguard_gnome_window import USBGuardGnomeApplication
 
@@ -30,8 +31,13 @@ class USBGuardAppIndicator(object):
         )
         self.indicator.set_status(AppIndicator3.IndicatorStatus.ACTIVE)
         self.update_menu()
+
         self.usbguard_dbus = USBGuardDBUS.get_instance()
         self.usbguard_dbus.register_device_policy_changed_callback(self.new_device_callback)
+
+        self.screensaver_dbus = ScreensaverDBUS.get_instance()
+        self.screensaver_dbus.register_screensaver_active_changed_callback(self.screensaver_active_changed_callback)
+
         self.device_policy_changed_ids = []
 
     def new_device_callback(self, device, rule_id):
