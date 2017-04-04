@@ -19,6 +19,8 @@ APPINDICATOR_ID = 'USBGuardGnomeApplet'
 
 class USBGuardAppIndicator(object):
 
+    USBGUARD_ICON_PATH = '/home/chriz/repositories/usbguard/src/GUI.Qt/resources/usbguard-icon.svg'
+
     usbguard_app = None
     notifications = {}
 
@@ -26,7 +28,7 @@ class USBGuardAppIndicator(object):
         Notify.init(APPINDICATOR_ID)
         self.indicator = AppIndicator3.Indicator.new(
             APPINDICATOR_ID,
-            '/home/chriz/repositories/usbguard/src/GUI.Qt/resources/usbguard-icon.svg',
+            self.USBGUARD_ICON_PATH,
             AppIndicator3.IndicatorCategory.SYSTEM_SERVICES
         )
         self.indicator.set_status(AppIndicator3.IndicatorStatus.ACTIVE)
