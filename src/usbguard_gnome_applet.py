@@ -69,10 +69,15 @@ class USBGuardAppIndicator(object):
         print("screensaver is now: {}".format(active))
         self.screensaver_active = active
         if not self.screensaver_active and self.new_devices_on_screensaver:
-            title = "{} USB devices connected during Screensaver".format(len(self.new_devices_on_screensaver))
-            description = "{} USB devices connected during Screensaver:".format(len(self.new_devices_on_screensaver))
+            title = "{} USB devices connected during absence".format(
+                len(self.new_devices_on_screensaver)
+            )
+            description = ""
             for device in self.new_devices_on_screensaver:
-                description += "\n{}: {}".format(device.number, device.get_class_description_string())
+                description += "\n • {} ({})".format(
+                    device.get_class_description_string(),
+                    device.name
+                )
             notification = Notify.Notification.new(title, description, self.USBGUARD_ICON_PATH)
             notification.set_category("device.added")
             notification.show()
