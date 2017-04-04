@@ -78,6 +78,42 @@ class Device(object):
             self.get_class_description_string(),
         ]
 
+    # NOTICE: The number is explicitly not part of the comparison here. This
+    # is needed for the screensaver new device comparison so upon reinserting
+    # the same device does not show in multiple entries.
+    def __eq__(self, other):
+        print("__eq__()")
+        equal = False
+        if isinstance(other, Device):
+            if (
+                    # self.number == other.number and
+                    self.rule == other.rule and
+                    self.id == other.id and
+                    self.name == other.name and
+                    self.hash == other.hash and
+                    self.parent_hash == other.parent_hash and
+                    self.via_port == other.via_port and
+                    self.with_interface == other.with_interface
+            ):
+                equal = True
+        return equal
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    def __hash__(self):
+        print("__hash__()")
+        return (
+            # hash(self.number) ^
+            hash(self.rule) ^
+            hash(self.id) ^
+            hash(self.name) ^
+            hash(self.hash) ^
+            hash(self.parent_hash) ^
+            hash(self.via_port) ^
+            hash(tuple(self.with_interface))
+        )
+
     @staticmethod
     def generate_device(device_dbus_struct):
         number = int(device_dbus_struct[0])
