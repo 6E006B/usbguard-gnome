@@ -85,8 +85,10 @@ class USBGuardGnomeWindow(Gtk.ApplicationWindow):
 
 class USBGuardGnomeApplication(Gtk.Application):
 
+    APPLICATION_ID = "org.gnome.usbguard.main"
+
     def __init__(self):
-        Gtk.Application.__init__(self)
+        Gtk.Application.__init__(self, application_id=self.APPLICATION_ID)
         self.usbguard_dbus = USBGuardDBUS.get_instance()
         self.window = None
 
