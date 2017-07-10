@@ -6,8 +6,9 @@ import sys
 
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gio, Gtk, Pango
+from gi.repository import Gdk, Gio, Gtk, Pango
 
+from new_device_window import USBGuardNewDeviceApplication
 from usbguard_dbus import USBGuardDBUS
 
 
@@ -35,6 +36,7 @@ class USBGuardGnomeWindowExpert(Gtk.ApplicationWindow):
             #     cell.props.weight = Pango.Weight.BOLD
             # the column is created
             col = Gtk.TreeViewColumn(self.DEVICES_LIST_COLUMNS[i], cell, text=i)
+            col.connect('button-press-event', self.on_row_clicked)
             # and it is appended to the treeview
             view.append_column(col)
 
@@ -61,6 +63,7 @@ class USBGuardGnomeWindow(Gtk.ApplicationWindow):
 
     def __init__(self, app):
         Gtk.ApplicationWindow.__init__(self, title='USBGuard Gnome Window', application=app)
+        self.application = app
 
     def init_devices_list(self, devices_list):
         self.devices_list_model = Gtk.ListStore(int, str, str, str, str, str, str)
@@ -77,10 +80,30 @@ class USBGuardGnomeWindow(Gtk.ApplicationWindow):
             col = Gtk.TreeViewColumn(self.DEVICES_LIST_COLUMNS[i], cell, text=i)
             view.append_column(col)
 
+        view.connect("button-press-event", self.on_row_clicked)
 
         grid = Gtk.Grid()
         grid.attach(view, 0, 0, 1, 1)
         self.add(grid)
+
+    def on_row_clicked(self, tree_view, event):
+        if event.type == Gdk.EventType.BUTTON_PRESS and event.button == 3:
+            # model, treeiter = tree_view.get_selection().get_selected()
+            # path, column = tree_view.get_cursor()
+            tree_path = tree_view.get_path_at_pos(event.x, event.y)[0]
+            # print("right mouse button clicked on: {}".format(model[treeiter][0]))
+            # print("iter = {}".format(self.devices_list_model[self.devices_list_model.get_iter(path)][0]))
+            print("tree_path = {}".format(self.devices_list_model[self.devices_list_model.get_iter(tree_path)][0]))
+            device_number = self.devices_list_model[self.devices_list_model.get_iter(tree_path)][0]
+            self.show_entry_popup_menu(event, device_number)
+
+    def show_entry_popup_menu(self, event, device_number):
+        menu = Gtk.Menu()
+        item_details = Gtk.MenuItem("Details")
+        item_details.connect('activate', self.application.on_details_clicked, device_number)
+        menu.append(item_details)
+        menu.show_all()
+        menu.popup(None, None, None, None, event.button, event.time)
 
 
 class USBGuardGnomeApplication(Gtk.Application):
@@ -120,6 +143,14 @@ class USBGuardGnomeApplication(Gtk.Application):
         print("You have quit.")
         self.window.close()
         self.quit()
+
+    def on_details_clicked(self, widget, device_number):
+        print("on_details_clicked()")
+        print("Menu item " + widget.get_name() + " was selected")
+        print("rule_number: {}".format(device_number))
+        device = self.usbguard_dbus.get_device(device_number)
+        app = USBGuardNewDeviceApplication(device, self.usbguard_dbus)
+        rule_id = app.run()
 
 
 def main():
