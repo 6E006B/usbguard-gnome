@@ -12,7 +12,11 @@ from usbguard_dbus import Rule, USBGuardDBUS
 class USBGuardNewDeviceWindow(Gtk.ApplicationWindow):
 
     def __init__(self, app, device):
-        Gtk.ApplicationWindow.__init__(self, title='New USB device', application=app)
+        Gtk.ApplicationWindow.__init__(
+            self,
+            title='New USB device',
+            application=app,
+        )
         self.application = app
         self.device = device
 
