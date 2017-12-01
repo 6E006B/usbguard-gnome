@@ -3,16 +3,17 @@
 from __future__ import absolute_import, print_function, unicode_literals
 
 import gi
+import os
 import signal
 
 gi.require_version('AppIndicator3', '0.1')
-gi.require_version('Gtk', '3.0')
+# gi.require_version('Gtk', '3.0')
 gi.require_version('Notify', '0.7')
 from gi.repository import AppIndicator3, Gtk, Notify
 
 from new_device_window import USBGuardNewDeviceApplication
 from screensaver_dbus import ScreensaverDBUS
-from usbguard_dbus import Rule, USBGuardDBUS
+from usbguard_dbus import PresenceEvent, Rule, USBGuardDBUS
 from usbguard_gnome_window import USBGuardGnomeApplication
 
 # Gdk.threads_init()
@@ -21,7 +22,8 @@ APPINDICATOR_ID = 'USBGuardGnomeApplet'
 
 class USBGuardAppIndicator(object):
 
-    USBGUARD_ICON_PATH = '/home/chriz/repositories/usbguard/src/GUI.Qt/resources/usbguard-icon.svg'
+    CURRDIR = os.path.dirname(os.path.abspath(__file__))
+    USBGUARD_ICON_PATH = os.path.join(CURRDIR, 'usbguard-icon.svg')
 
     usbguard_app = None
     notifications = {}
@@ -39,18 +41,14 @@ class USBGuardAppIndicator(object):
         self.update_menu()
 
         self.usbguard_dbus = USBGuardDBUS.get_instance()
-        self.usbguard_dbus.register_device_policy_changed_callback(self.new_device_callback)
+        self.usbguard_dbus.register_device_presence_changed_callback(self.new_device_callback)
 
         self.screensaver_dbus = ScreensaverDBUS.get_instance()
         self.screensaver_dbus.register_screensaver_active_changed_callback(self.screensaver_active_changed_callback)
 
-        self.device_policy_changed_ids = []
-
-    def new_device_callback(self, device, rule_id):
-        # user response to a previous notification will raise a new policy changed event, therefore ignore it
-        if rule_id in self.device_policy_changed_ids:
-            self.device_policy_changed_ids.remove(rule_id)
-        else:
+    def new_device_callback(self, presenceEvent, device):
+        print("new_device_callback({})".format(presenceEvent))
+        if presenceEvent != PresenceEvent.REMOVE.value:
             if self.screensaver_active:
                 self.new_devices_on_screensaver.add(device)
             else:
@@ -147,6 +145,7 @@ class USBGuardAppIndicator(object):
 def main():
     signal.signal(signal.SIGINT, signal.SIG_DFL)
     USBGuardAppIndicator().run()
+
 
 if __name__ == "__main__":
     main()

@@ -15,6 +15,13 @@ class Rule(IntEnum):
     REJECT = 2
 
 
+class PresenceEvent(IntEnum):
+    PRESENT = 0
+    INSERT = 1
+    UPDATE = 2
+    REMOVE = 3
+
+
 class USBGuardDBUS(object):
 
     INSTANCE = None
@@ -29,28 +36,28 @@ class USBGuardDBUS(object):
         DBusGMainLoop(set_as_default=True)
         self.bus = dbus.SystemBus()
 
-        policy_object = self.bus.get_object('org.usbguard', '/org/usbguard/Policy')
-        self.policy_interface = dbus.Interface(policy_object, dbus_interface='org.usbguard.Policy')
         devices_object = self.bus.get_object('org.usbguard', '/org/usbguard/Devices')
-        self.devices_interface = dbus.Interface(devices_object, dbus_interface='org.usbguard.Devices')
+        self.policy_interface = dbus.Interface(devices_object, dbus_interface='org.usbguard.Policy')
+        self.signal_interface = dbus.Interface(devices_object, dbus_interface='org.usbguard.Devices')
+        usbguard_object = self.bus.get_object('org.usbguard', '/org/usbguard')
+        self.devices_interface = dbus.Interface(usbguard_object, dbus_interface='org.usbguard.Devices')
 
         self.add_signal_receivers()
-        self.device_policy_changed_callbacks = []
+        self.device_presence_changed_callbacks = []
 
     def add_signal_receivers(self):
-        self.devices_interface.connect_to_signal('DevicePolicyChanged', self.on_device_policy_changed)
+        self.signal_interface.connect_to_signal('DevicePresenceChanged', self.on_device_presence_changed)
 
-    def on_device_policy_changed(self, id, target_old, target_new, device_rule, rule_id, attributes):
-        print("DevicePolicyChanged: {}".format(attributes))
+    def on_device_presence_changed(self, id, event, target, device_rule, attributes):
         new_device = Device.generate_device([id, device_rule])
-        for callback in self.device_policy_changed_callbacks:
-            callback(new_device, rule_id)
+        for callback in self.device_presence_changed_callbacks:
+            callback(event, new_device)
 
-    def register_device_policy_changed_callback(self, callback):
-        self.device_policy_changed_callbacks.append(callback)
+    def register_device_presence_changed_callback(self, callback):
+        self.device_presence_changed_callbacks.append(callback)
 
-    def unregister_device_policy_changed_callback(self, callback):
-        self.device_policy_changed_callbacks.remove(callback)
+    def unregister_device_presence_changed_callback(self, callback):
+        self.device_presence_changed_callbacks.remove(callback)
 
     def get_all_devices(self):
         devices = self.devices_interface.listDevices('match')
@@ -78,6 +85,7 @@ class USBGuardDBUS(object):
         assert(isinstance(rule, Rule))
         rule_id = self.devices_interface.applyDevicePolicy(device_id, rule, permanent)
         return rule_id
+
 
 if __name__ == "__main__":
     usbgdbus = USBGuardDBUS()
