@@ -12,6 +12,7 @@ from new_device_window import USBGuardNewDeviceApplication
 from usbguard_dbus import USBGuardDBUS
 
 
+# TODO: Is this deprecated ?
 class USBGuardGnomeWindowExpert(Gtk.ApplicationWindow):
 
     DEVICES_LIST_COLUMNS = [
@@ -22,6 +23,10 @@ class USBGuardGnomeWindowExpert(Gtk.ApplicationWindow):
         Gtk.ApplicationWindow.__init__(self, title='USBGuard Gnome Window', application=app)
 
     def init_devices_list(self, devices_list):
+        """create the gui device list and grid
+
+        devices_list: a list of Device objects - will be displayed in the grid
+        """
         devices_list_model = Gtk.ListStore(int, str, str, str, str, str, str)
         for device in devices_list:
             devices_list_model.append(device.as_list())
@@ -55,7 +60,9 @@ class USBGuardGnomeWindowExpert(Gtk.ApplicationWindow):
         # attach the grid to the window
         self.add(grid)
 
+
 class USBGuardGnomeWindow(Gtk.ApplicationWindow):
+    """Window class to display the Application main window"""
 
     DEVICES_LIST_COLUMNS = [
         'number', 'rule', 'id', 'name', 'port', 'interface', 'description'
@@ -66,6 +73,10 @@ class USBGuardGnomeWindow(Gtk.ApplicationWindow):
         self.application = app
 
     def init_devices_list(self, devices_list):
+        """create the gui device list and grid
+
+        devices_list: a list of Device objects - will be displayed in the grid
+        """
         self.devices_list_model = Gtk.ListStore(int, str, str, str, str, str, str)
         for device in devices_list:
             self.devices_list_model.append(device.as_list())
@@ -87,6 +98,7 @@ class USBGuardGnomeWindow(Gtk.ApplicationWindow):
         self.add(grid)
 
     def on_row_clicked(self, tree_view, event):
+        """Connects the right-click on a device entry to the event handler"""
         if event.type == Gdk.EventType.BUTTON_PRESS and event.button == 3:
             # model, treeiter = tree_view.get_selection().get_selected()
             # path, column = tree_view.get_cursor()
@@ -98,6 +110,13 @@ class USBGuardGnomeWindow(Gtk.ApplicationWindow):
             self.show_entry_popup_menu(event, device_number)
 
     def show_entry_popup_menu(self, event, device_number):
+        """Popup menu handler for a device entry
+
+        Creating and showing the menu
+
+        event:
+        device_number: (usbguard) number of the device
+        """
         menu = Gtk.Menu()
         item_details = Gtk.MenuItem("Details")
         item_details.connect('activate', self.application.on_details_clicked, device_number)
@@ -116,12 +135,14 @@ class USBGuardGnomeApplication(Gtk.Application):
         self.window = None
 
     def do_activate(self):
+        """Init window"""
         self.window = USBGuardGnomeWindow(self)
         devices_list = self.usbguard_dbus.get_all_devices()
         self.window.init_devices_list(devices_list)
         self.window.show_all()
 
     def do_startup(self):
+        """Init the application"""
         Gtk.Application.do_startup(self)
 
         # create a menu
@@ -137,14 +158,21 @@ class USBGuardGnomeApplication(Gtk.Application):
         self.add_action(quit_action)
 
     def on_quit_clicked(self, action, parameter):\
+        """Simple handler for on-quite click event"""
         self.execute_quit()
 
     def execute_quit(self):
+        """Terminating the application"""
         print("You have quit.")
         self.window.close()
         self.quit()
 
     def on_details_clicked(self, widget, device_number):
+        """OnClick handler for details on one device
+
+        widget: the widget being clicked
+        device_number: number of the device selected
+        """
         print("on_details_clicked()")
         print("Menu item " + widget.get_name() + " was selected")
         print("rule_number: {}".format(device_number))
@@ -157,6 +185,7 @@ def main():
     app = USBGuardGnomeApplication()
     exit_status = app.run(sys.argv)
     sys.exit(exit_status)
+
 
 if __name__ == "__main__":
     main()

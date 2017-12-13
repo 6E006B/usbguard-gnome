@@ -6,6 +6,7 @@ from rule_parser import RULE
 
 
 class Device(object):
+    """Device class"""
 
     # TODO: Create more specific lookup also including sub-class and protocol
     # (c.f. http://www.usb.org/developers/defined_class)
@@ -35,6 +36,19 @@ class Device(object):
     }
 
     def __init__(self, number, rule, id, serial, name, hash, parent_hash, via_port, with_interface):
+        """Init the class
+
+        number: USBGuard device number
+        rule: USBGuard device rule
+        id: Vendor/Device ID (04f2:b2ea)
+        serial:
+        name: Type description of the device ("Integrated Camera")
+        hash: USBGuard Hash of the device
+        parent_hash: USBGuard parent hash of the device
+        via_port: usb port it is connected to
+        with_interface: device interface ("type of device" Class:Subclass:Protocol)
+        """
+
         self.number = number
         self.rule = rule
         self.id = id
@@ -48,6 +62,7 @@ class Device(object):
             self.with_interface = [self.with_interface]
 
     def get_class_description_set(self):
+        """Get class description based on interface"""
         descriptions = set()
         for interface in self.with_interface:
             base_class_bytes = int(interface[:2], 16)
@@ -55,21 +70,26 @@ class Device(object):
         return descriptions
 
     def get_class_description_string(self):
+        """Return the class description string"""
         return "\n".join(self.get_class_description_set())
 
     def get_interfaces(self):
+        """Get device interface id number ("type of device")"""
         return set(self.with_interface)
 
     def is_allowed(self):
+        """Return True if device is allowed"""
         return self.rule.lower() == "allow"
 
     def __str__(self):
+        """Return string description of device: number, id, name, rule, class description string"""
         return "<{} ({}) '{}' {} '{}'>".format(self.number, self.id, self.name, self.rule, self.get_class_description_string())
 
     def __repr__(self):
         return self.__str__()
 
     def as_list(self):
+        """Return device parameter as list (for the GUI grid)"""
         return [
             self.number,
             self.rule,
@@ -84,6 +104,7 @@ class Device(object):
     # is needed for the screensaver new device comparison so upon reinserting
     # the same device does not show in multiple entries.
     def __eq__(self, other):
+        """Check if a device equals the current object"""
         print("__eq__()")
         equal = False
         if isinstance(other, Device):
@@ -101,9 +122,11 @@ class Device(object):
         return equal
 
     def __ne__(self, other):
+        """Check if another devices does not equal the current object"""
         return not self.__eq__(other)
 
     def __hash__(self):
+        """Return generated device hash identifying the device"""
         print("__hash__()")
         return (
             # hash(self.number) ^
@@ -118,12 +141,22 @@ class Device(object):
 
     @staticmethod
     def generate_device(device_dbus_struct):
+        """Generate a device based on DBus info structure
+
+        device_dbus_struct: Info structure to generate device from
+        returns: Device object
+        """
         number = int(device_dbus_struct[0])
         info = parse_rule(str(device_dbus_struct[1]))
         return Device(number=number, **info)
 
 
 def parse_rule(rule_string):
+    """Parse a rule
+
+    rule_string: The string of the rule
+    returns: a dict
+    """
     result_dict = {}
     parsed_rule = RULE.parseString(rule_string).asList()
     result_dict['rule'] = parsed_rule[0]
@@ -131,5 +164,7 @@ def parse_rule(rule_string):
         result_dict[key.replace('-', '_')] = value
     return result_dict
 
+
 if __name__ == "__main__":
+    """Test rule parsing"""
     print(parse_rule('allow id 1d6b:0002 serial "0000:00:14.0" name "xHCI Host Controller" hash "Miigb8mx72Z0q6L+YMai0mDZSlYC8qiSMctoUjByF2o=" parent-hash "G1ehGQdrl3dJ9HvW9w2HdC//pk87pKzFE1WY25bq8k4=" with-interface 09:00:00'))

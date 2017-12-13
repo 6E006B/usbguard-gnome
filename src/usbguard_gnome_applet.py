@@ -21,9 +21,11 @@ APPINDICATOR_ID = 'USBGuardGnomeApplet'
 
 
 class USBGuardAppIndicator(object):
+    """App indicator to handle usb events"""
 
     CURRDIR = os.path.dirname(os.path.abspath(__file__))
     USBGUARD_ICON_PATH = os.path.join(CURRDIR, 'usbguard-icon.svg')
+    # TODO: Icon is missing, find it
 
     usbguard_app = None
     notifications = {}
@@ -47,6 +49,13 @@ class USBGuardAppIndicator(object):
         self.screensaver_dbus.register_screensaver_active_changed_callback(self.screensaver_active_changed_callback)
 
     def new_device_callback(self, presenceEvent, device):
+        """Callback handling new devices
+
+        Creates the notification
+
+        presenceEvent: event type (remove ?)
+        device: device object
+        """
         print("new_device_callback({})".format(presenceEvent))
         if presenceEvent != PresenceEvent.REMOVE.value:
             if self.screensaver_active:
@@ -64,6 +73,12 @@ class USBGuardAppIndicator(object):
                 self.notifications[notification.props.id] = notification
 
     def screensaver_active_changed_callback(self, active):
+        """Monitoring screen saver status
+
+        Callback for screen saver state changes
+
+        active: new screen saver state
+        """
         print("screensaver is now: {}".format(active))
         self.screensaver_active = active
         if not self.screensaver_active and self.new_devices_on_screensaver:
@@ -82,10 +97,12 @@ class USBGuardAppIndicator(object):
             self.new_devices_on_screensaver = set()
 
     def run(self):
+        """start the app"""
         Gtk.main()
         print("Gtk.main() returned")
 
     def update_menu(self):
+        """Create the menu"""
         menu = Gtk.Menu()
         open_text = 'Open' if self.usbguard_app is None else 'Close'
         item_open = Gtk.MenuItem(open_text)
@@ -98,13 +115,19 @@ class USBGuardAppIndicator(object):
         self.indicator.set_menu(menu)
 
     def open_window(self):
+        """Open window event handler"""
         self.execute_open_window()
 
     def quit(self):
+        """lower exit handler"""
         Notify.uninit()
         Gtk.main_quit()
 
     def execute_open_window(self):
+        """Start the usb guard gnome application
+
+        Or terminate it, if it is running.
+        """
         if self.usbguard_app is None:
             self.usbguard_app = USBGuardGnomeApplication()
             self.usbguard_app.run()
@@ -114,31 +137,53 @@ class USBGuardAppIndicator(object):
         self.update_menu()
 
     def on_quit(self, _):
+        """quit event handler"""
         if self.usbguard_app is not None:
             self.usbguard_app.execute_quit()
         self.quit()
 
     def on_open(self, _):
+        """On open event handler"""
         self.open_window()
 
     def on_allow_clicked(self, notification, action_name, device):
+        """Handle device allow click action
+
+        notification: notification to act on
+        action_name: not used
+        device: device to allow
+        """
         print("on_allow_clicked() for device {}".format(device))
         rule_id = self.usbguard_dbus.apply_device_policy(device.number, Rule.ALLOW, False)
         self.device_policy_changed_ids.append(rule_id)
         self.notifications[notification.props.id] = None
 
     def on_block_clicked(self, notification, action_name, device):
+        """Handle device block click action
+
+        notification: notification to act on
+        action_name: not used
+        device: device to block
+        """
         print("on_block_clicked()")
         rule_id = self.usbguard_dbus.apply_device_policy(device.number, Rule.BLOCK, False)
         self.device_policy_changed_ids.append(rule_id)
         self.notifications[notification.props.id] = None
 
     def on_notification_clicked(self, notification, action_name, device):
+        """Handle on-click for notifications
+
+        notification: Notification being clicked
+        """
         app = USBGuardNewDeviceApplication(device, self.usbguard_dbus)
         rule_id = app.run()
         self.notifications[notification.props.id] = None
 
     def on_notification_closed(self, notification):
+        """Remove closed notification from internal list
+
+        notification: Notification to remove
+        """
         self.notifications[notification.props.id] = None
 
 
