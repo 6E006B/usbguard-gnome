@@ -17,7 +17,7 @@ from usbguard_dbus import PresenceEvent, Rule, USBGuardDBUS
 from usbguard_gnome_window import USBGuardGnomeApplication
 
 # Gdk.threads_init()
-APPINDICATOR_ID = 'org.usbguard.gnome.appindicator'
+APPINDICATOR_ID = 'org.gnome.usbguard.appindicator'
 
 
 class USBGuardAppIndicator(object):
