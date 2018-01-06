@@ -12,6 +12,12 @@ from usbguard_dbus import Rule, USBGuardDBUS
 class USBGuardNewDeviceWindow(Gtk.ApplicationWindow):
 
     def __init__(self, app, device):
+        """ New device window init
+
+        app: application object
+        device: Device object
+        """
+
         Gtk.ApplicationWindow.__init__(
             self,
             title='New USB device',
@@ -54,6 +60,11 @@ class USBGuardNewDeviceWindowExpert(Gtk.ApplicationWindow):
     ]
 
     def __init__(self, app, device):
+        """ New device window expert init
+
+        app: application object
+        device: Device object
+        """
         Gtk.ApplicationWindow.__init__(self, title='New USB device', application=app)
         self.application = app
         self.device = device
@@ -89,21 +100,27 @@ class USBGuardNewDeviceWindowExpert(Gtk.ApplicationWindow):
 
 class USBGuardNewDeviceApplication(Gtk.Application):
 
-    APPLICATION_ID_FORMAT = "org.usbguard.gnome.device{}"
+    APPLICATION_ID_FORMAT = "org.gnome.usbguard.device.{}"
 
     def __init__(self, device, usbguard_dbus):
+        """Init new device application
+
+        device: Device object
+        usbguard_dbus: USBGuard Dbus connection object
+        """
         app_id = self.APPLICATION_ID_FORMAT.format(device.number)
-        print(app_id)
         Gtk.Application.__init__(self, application_id=app_id)
         self.device = device
         self.usbguard_dbus = usbguard_dbus
         self.window = None
 
     def do_activate(self):
+        """Show window"""
         self.window = USBGuardNewDeviceWindow(self, self.device)
         self.window.show_all()
 
     def do_startup(self):
+        """Init the window"""
         Gtk.Application.do_startup(self)
 
         # create a menu
@@ -119,10 +136,18 @@ class USBGuardNewDeviceApplication(Gtk.Application):
         self.add_action(quit_action)
 
     def quit_cb(self, action, parameter):
+        """App exit handler"""
         print("You have quit.")
         self.quit()
 
     def on_switch_activated(self, switch, gparam):
+        """Device activation/deactivation toggle handler
+
+        Callback for the switches in the windows
+
+        switch: switch being toggled
+        gparam: not used
+        """
         if switch.get_active():
             state = "on"
             rule = Rule.ALLOW
@@ -141,6 +166,7 @@ def main():
     app = USBGuardNewDeviceApplication(device, usbguard_dbus)
     exit_status = app.run()
     sys.exit(exit_status)
+
 
 if __name__ == "__main__":
     main()
