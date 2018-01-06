@@ -81,6 +81,14 @@ class Device(object):
         """Return True if device is allowed"""
         return self.rule.lower() == "allow"
 
+    def get_vendor_id(self):
+        """Return vendor id (or None if it cannot be derived from the device id)"""
+        return self.id.split(':').get(0, None)
+
+    def get_product_id(self):
+        """Return product id (or None if it cannot be derived from the device id)"""
+        return self.id.split(':').get(1, None)
+
     def __str__(self):
         """Return string description of device: number, id, name, rule, class description string"""
         return "<{} ({}) '{}' {} '{}'>".format(self.number, self.id, self.name, self.rule, self.get_class_description_string())
