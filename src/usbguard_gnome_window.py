@@ -157,7 +157,7 @@ class USBGuardGnomeApplication(Gtk.Application):
         quit_action.connect("activate", self.on_quit_clicked)
         self.add_action(quit_action)
 
-    def on_quit_clicked(self, action, parameter):\
+    def on_quit_clicked(self, action, parameter):
         """Simple handler for on-quite click event"""
         self.execute_quit()
 
