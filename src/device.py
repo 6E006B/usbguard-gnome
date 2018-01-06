@@ -94,6 +94,7 @@ class Device(object):
             self.number,
             self.rule,
             self.id,
+            self.serial,
             self.name,
             self.via_port,
             "\n".join(self.get_interfaces()),
