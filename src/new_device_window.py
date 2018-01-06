@@ -100,7 +100,7 @@ class USBGuardNewDeviceWindowExpert(Gtk.ApplicationWindow):
 
 class USBGuardNewDeviceApplication(Gtk.Application):
 
-    APPLICATION_ID_FORMAT = "org.gnome.usbguard.device.{}"
+    APPLICATION_ID_FORMAT = "org.usbguard.gnome.device{}"
 
     def __init__(self, device, usbguard_dbus):
         """Init new device application
