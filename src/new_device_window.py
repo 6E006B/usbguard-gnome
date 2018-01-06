@@ -56,7 +56,7 @@ class USBGuardNewDeviceWindow(Gtk.ApplicationWindow):
 class USBGuardNewDeviceWindowExpert(Gtk.ApplicationWindow):
 
     DEVICES_LIST_COLUMNS = [
-        'number', 'rule', 'id', 'name', 'port', 'interface', 'description'
+        'number', 'rule', 'id', 'serial', 'name', 'port', 'interface', 'description'
     ]
 
     def __init__(self, app, device):
@@ -69,7 +69,7 @@ class USBGuardNewDeviceWindowExpert(Gtk.ApplicationWindow):
         self.application = app
         self.device = device
 
-        devices_list_model = Gtk.ListStore(int, str, str, str, str, str, str)
+        devices_list_model = Gtk.ListStore(int, str, str, str, str, str, str, str)
         devices_list_model.append(device.as_list())
 
         view = Gtk.TreeView(model=devices_list_model)
