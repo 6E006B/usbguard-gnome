@@ -6,13 +6,13 @@ import sys
 
 import gi
 gi.require_version('Gtk', '3.0')
+gi.require_version('Gdk', '3.0')
 from gi.repository import Gdk, Gio, Gtk, Pango
 
 from new_device_window import USBGuardNewDeviceApplication
 from usbguard_dbus import USBGuardDBUS
 
-
-# TODO: Is this deprecated ?
+# TODO: implement and use this expert mode window
 class USBGuardGnomeWindowExpert(Gtk.ApplicationWindow):
 
     DEVICES_LIST_COLUMNS = [
@@ -65,7 +65,7 @@ class USBGuardGnomeWindow(Gtk.ApplicationWindow):
     """Window class to display the Application main window"""
 
     DEVICES_LIST_COLUMNS = [
-        'number', 'rule', 'id', 'name', 'port', 'interface', 'description'
+        'number', 'rule', 'id', 'serial', 'name', 'port', 'interface', 'description',
     ]
 
     def __init__(self, app):
@@ -77,7 +77,7 @@ class USBGuardGnomeWindow(Gtk.ApplicationWindow):
 
         devices_list: a list of Device objects - will be displayed in the grid
         """
-        self.devices_list_model = Gtk.ListStore(int, str, str, str, str, str, str)
+        self.devices_list_model = Gtk.ListStore(int, str, str, str, str, str, str, str)
         for device in devices_list:
             self.devices_list_model.append(device.as_list())
 
