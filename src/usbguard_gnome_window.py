@@ -11,16 +11,38 @@ from gi.repository import Gdk, Gio, Gtk, Pango
 
 from new_device_window import USBGuardNewDeviceApplication
 from usbguard_dbus import USBGuardDBUS
+import gettext
+import locale
+from os.path import abspath, dirname, join
+
+# Setup
+
+APP = 'usbguard_gnome'
+WHERE_AM_I = abspath(dirname(__file__))
+LOCALE_DIR = join(WHERE_AM_I, '..', 'mo')    # Currently we run from the app dir.
+# TODO: Fix this path if we install gnome_usbguard system wide
+
+gettext.bindtextdomain(APP, LOCALE_DIR)
+gettext.textdomain(APP)
+_ = gettext.gettext
+locale.setlocale(locale.LC_ALL, '')
+locale.bindtextdomain(APP, LOCALE_DIR)
+
+# For testing the proper path
+print(gettext.find(APP, LOCALE_DIR))
+print('Using locale directory: {}'.format(LOCALE_DIR))
+
+
 
 # TODO: implement and use this expert mode window
 class USBGuardGnomeWindowExpert(Gtk.ApplicationWindow):
 
     DEVICES_LIST_COLUMNS = [
-        'number', 'rule', 'id', 'name', 'port', 'interface', 'description'
+        _('number'), _('rule'), _('id'), _('name'), _('port'), _('interface'), _('description')
     ]
 
     def __init__(self, app):
-        Gtk.ApplicationWindow.__init__(self, title='USBGuard Gnome Window', application=app)
+        Gtk.ApplicationWindow.__init__(self, title=_('USBGuard Gnome Window'), application=app)
 
     def init_devices_list(self, devices_list):
         """create the gui device list and grid
@@ -65,11 +87,11 @@ class USBGuardGnomeWindow(Gtk.ApplicationWindow):
     """Window class to display the Application main window"""
 
     DEVICES_LIST_COLUMNS = [
-        'number', 'rule', 'id', 'serial', 'name', 'port', 'interface', 'description',
+        _('number'), _('rule'), _('id'), _('serial'), _('name'), _('port'), _('interface'), _('description'),
     ]
 
     def __init__(self, app):
-        Gtk.ApplicationWindow.__init__(self, title='USBGuard Gnome Window', application=app)
+        Gtk.ApplicationWindow.__init__(self, title=_('USBGuard Gnome Window'), application=app)
         self.application = app
 
     def init_devices_list(self, devices_list):
@@ -79,6 +101,7 @@ class USBGuardGnomeWindow(Gtk.ApplicationWindow):
         """
         self.devices_list_model = Gtk.ListStore(int, str, str, str, str, str, str, str)
         for device in devices_list:
+            print(device.as_list())
             self.devices_list_model.append(device.as_list())
 
         view = Gtk.TreeView(model=self.devices_list_model)
@@ -148,7 +171,7 @@ class USBGuardGnomeApplication(Gtk.Application):
         # create a menu
         menu = Gio.Menu()
         # append to the menu three options
-        menu.append("Quit", "app.quit")
+        menu.append(_("Quit"), "app.quit")
         # set the menu as menu of the application
         self.set_app_menu(menu)
 
