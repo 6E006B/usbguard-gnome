@@ -61,6 +61,23 @@ class Device(object):
         if not isinstance(self.with_interface, list):
             self.with_interface = [self.with_interface]
 
+    def has_interface(self, interface_class):
+        """
+
+        interface_class: interface class to test for
+        returns: true if interface class is supported
+        """
+
+        for interface in self.with_interface:
+            base_class_bytes = int(interface[:2], 16)
+            if base_class_bytes == interface_class:
+                return True
+        return False
+
+    def is_hid(self):
+        """Return True if device is HID"""
+        return self.has_interface(0x03)
+
     def get_class_description_set(self):
         """Get class description based on interface"""
         descriptions = set()
