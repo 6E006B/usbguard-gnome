@@ -10,6 +10,7 @@ from usbguard_dbus import Rule, USBGuardDBUS
 
 import gettext
 import locale
+import sys
 from os.path import abspath, dirname, join
 
 # Setup
@@ -19,9 +20,14 @@ WHERE_AM_I = abspath(dirname(__file__))
 LOCALE_DIR = join(WHERE_AM_I, '..', 'mo')    # Currently we run from the app dir.
 # TODO: Fix this path if we install gnome_usbguard system wide
 
-gettext.bindtextdomain(APP, LOCALE_DIR)
-gettext.textdomain(APP)
-_ = gettext.gettext
+kwargs = {"localedir": LOCALE_DIR}
+if sys.version_info[0] > 3:
+    # In Python 2, ensure that the _() that gets installed into built-ins
+    # always returns unicodes.  This matches the default behavior under
+    # Python 3, although that keyword argument is not present in the
+    # Python 3 API.
+    kwargs['unicode'] = True
+gettext.install(APP, **kwargs)
 locale.setlocale(locale.LC_ALL, '')
 locale.bindtextdomain(APP, LOCALE_DIR)
 
