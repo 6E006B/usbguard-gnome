@@ -8,6 +8,34 @@ from gi.repository import Gio, GObject, Gtk, Pango
 
 from usbguard_dbus import Rule, USBGuardDBUS
 
+import gettext
+import locale
+import sys
+from os.path import abspath, dirname, join
+
+# Setup
+
+APP = 'usbguard_gnome'
+WHERE_AM_I = abspath(dirname(__file__))
+LOCALE_DIR = join(WHERE_AM_I, '..', 'mo')    # Currently we run from the app dir.
+# TODO: Fix this path if we install gnome_usbguard system wide
+
+kwargs = {"localedir": LOCALE_DIR}
+if sys.version_info[0] > 3:
+    # In Python 2, ensure that the _() that gets installed into built-ins
+    # always returns unicodes.  This matches the default behavior under
+    # Python 3, although that keyword argument is not present in the
+    # Python 3 API.
+    kwargs['unicode'] = True
+gettext.install(APP, **kwargs)
+locale.setlocale(locale.LC_ALL, '')
+locale.bindtextdomain(APP, LOCALE_DIR)
+
+# For testing the proper path
+print(gettext.find(APP, LOCALE_DIR))
+print('New device window using locale directory: {}'.format(LOCALE_DIR))
+
+
 
 class USBGuardNewDeviceWindow(Gtk.ApplicationWindow):
 
@@ -20,7 +48,7 @@ class USBGuardNewDeviceWindow(Gtk.ApplicationWindow):
 
         Gtk.ApplicationWindow.__init__(
             self,
-            title='New USB device',
+            title=_('New USB device'),
             application=app,
         )
         self.application = app
@@ -29,20 +57,20 @@ class USBGuardNewDeviceWindow(Gtk.ApplicationWindow):
         grid = Gtk.Grid(margin=10)
 
         title_label = Gtk.Label(margin=10, justify=Gtk.Justification.CENTER)
-        title_label.set_markup("<big><b>New USB Device inserted</b></big>")
+        title_label.set_markup(_("<big><b>New USB Device inserted</b></big>"))
         grid.attach(title_label, 0, 0, 2, 1)
 
-        type_text = "Device type:\n<b>{}</b>".format(GObject.markup_escape_text(self.device.get_class_description_string()))
+        type_text = _("Device type:\n<b>{}</b>").format(GObject.markup_escape_text(self.device.get_class_description_string()))
         type_label = Gtk.Label(margin=10, justify=Gtk.Justification.CENTER)
         type_label.set_markup(type_text)
         grid.attach(type_label, 0, 1, 1, 1)
 
-        name_text = "Device name:\n<b>{}</b>".format(GObject.markup_escape_text(self.device.name))
+        name_text = _("Device name:\n<b>{}</b>").format(GObject.markup_escape_text(self.device.name))
         name_label = Gtk.Label(margin=10, justify=Gtk.Justification.CENTER)
         name_label.set_markup(name_text)
         grid.attach(name_label, 1, 1, 1, 1)
 
-        action_label = Gtk.Label("Status:", margin=10)
+        action_label = Gtk.Label(_("Status:"), margin=10)
         grid.attach(action_label, 0, 2, 1, 1)
 
         switch = Gtk.Switch(margin=10)
@@ -56,7 +84,7 @@ class USBGuardNewDeviceWindow(Gtk.ApplicationWindow):
 class USBGuardNewDeviceWindowExpert(Gtk.ApplicationWindow):
 
     DEVICES_LIST_COLUMNS = [
-        'number', 'rule', 'id', 'serial', 'name', 'port', 'interface', 'description'
+        _('number'), _('rule'), _('id'), _('serial'), _('name'), _('port'), _('interface'), _('description')
     ]
 
     def __init__(self, app, device):
@@ -65,7 +93,7 @@ class USBGuardNewDeviceWindowExpert(Gtk.ApplicationWindow):
         app: application object
         device: Device object
         """
-        Gtk.ApplicationWindow.__init__(self, title='New USB device', application=app)
+        Gtk.ApplicationWindow.__init__(self, title=_('New USB device'), application=app)
         self.application = app
         self.device = device
 
@@ -126,7 +154,7 @@ class USBGuardNewDeviceApplication(Gtk.Application):
         # create a menu
         menu = Gio.Menu()
         # append to the menu three options
-        menu.append("Quit", "app.quit")
+        menu.append(_("Quit"), "app.quit")
         # set the menu as menu of the application
         self.set_app_menu(menu)
 

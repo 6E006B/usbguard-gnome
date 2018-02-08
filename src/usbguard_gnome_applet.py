@@ -4,6 +4,7 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import gi
 import os
+import sys
 import signal
 
 gi.require_version('AppIndicator3', '0.1')
@@ -15,6 +16,34 @@ from new_device_window import USBGuardNewDeviceApplication
 from screensaver_dbus import ScreensaverDBUS
 from usbguard_dbus import PresenceEvent, Rule, USBGuardDBUS
 from usbguard_gnome_window import USBGuardGnomeApplication
+
+import gettext
+import locale
+from os.path import abspath, dirname, join
+
+# Setup
+
+APP = 'usbguard_gnome'
+WHERE_AM_I = abspath(dirname(__file__))
+LOCALE_DIR = join(WHERE_AM_I, '..', 'mo')    # Currently we run from the app dir.
+# TODO: Fix this path if we install gnome_usbguard system wide
+
+kwargs = {"localedir": LOCALE_DIR}
+if sys.version_info[0] > 3:
+    # In Python 2, ensure that the _() that gets installed into built-ins
+    # always returns unicodes.  This matches the default behavior under
+    # Python 3, although that keyword argument is not present in the
+    # Python 3 API.
+    kwargs['unicode'] = True
+gettext.install(APP, **kwargs)
+locale.setlocale(locale.LC_ALL, '')
+locale.bindtextdomain(APP, LOCALE_DIR)
+
+# For testing the proper path
+print(gettext.find(APP, LOCALE_DIR))
+print('Applet using locale directory: {}'.format(LOCALE_DIR))
+
+
 
 # Gdk.threads_init()
 APPINDICATOR_ID = 'org.gnome.usbguard.appindicator'
@@ -62,7 +91,7 @@ class USBGuardAppIndicator(object):
                 self.new_devices_on_screensaver.add(device)
             else:
                 description = device.get_class_description_string()
-                notification = Notify.Notification.new("New USB device inserted", description, self.USBGUARD_ICON_PATH)
+                notification = Notify.Notification.new(_("New USB device inserted"), description, self.USBGUARD_ICON_PATH)
                 notification.add_action('allow', 'Allow', self.on_allow_clicked, device)
                 notification.add_action('block', 'Block', self.on_allow_clicked, device)
                 notification.add_action('default', 'default', self.on_notification_clicked, device)
@@ -82,7 +111,7 @@ class USBGuardAppIndicator(object):
         print("screensaver is now: {}".format(active))
         self.screensaver_active = active
         if not self.screensaver_active and self.new_devices_on_screensaver:
-            title = "{} USB devices connected during absence".format(
+            title = _("{} USB devices connected during absence").format(
                 len(self.new_devices_on_screensaver)
             )
             description = ""
@@ -104,11 +133,11 @@ class USBGuardAppIndicator(object):
     def update_menu(self):
         """Create the menu"""
         menu = Gtk.Menu()
-        open_text = 'Open' if self.usbguard_app is None else 'Close'
+        open_text = _('Open') if self.usbguard_app is None else _('Close')
         item_open = Gtk.MenuItem(open_text)
         item_open.connect('activate', self.on_open)
         menu.append(item_open)
-        item_quit = Gtk.MenuItem('Quit')
+        item_quit = Gtk.MenuItem(_('Quit'))
         item_quit.connect('activate', self.on_quit)
         menu.append(item_quit)
         menu.show_all()

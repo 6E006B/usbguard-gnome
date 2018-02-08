@@ -8,6 +8,20 @@ Requires USBGuard to run. https://usbguard.github.io/ or ```sudo apt install usb
 Needs basic configuration after installation.
 
 
+## Development
+
+### Internationalisation (I18N)
+
+Two bash scripts support I18N:
+
+#### extract_strings.sh
+
+Will extract strings in python code into a *.pot* file
+
+#### generate_mo.sh
+
+Will generate a compiled *.mo* files out of translated *.po* files
+
 ## Programs
 
 This package contains
@@ -19,6 +33,3 @@ Display a management window for your usb devices. Requires the user to have righ
 ## usbguard_gnome_applet.py
 
 An applet for GNOME
-
-
-

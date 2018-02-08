@@ -1,0 +1,107 @@
+# Translations template for PROJECT.
+# Copyright (C) 2018 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2018.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2018-01-08 17:08+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.4.0\n"
+
+#: src/new_device_window.py:45 src/new_device_window.py:90
+msgid "New USB device"
+msgstr ""
+
+#: src/new_device_window.py:54
+msgid "<big><b>New USB Device inserted</b></big>"
+msgstr ""
+
+#: src/new_device_window.py:57
+msgid ""
+"Device type:\n"
+"<b>{}</b>"
+msgstr ""
+
+#: src/new_device_window.py:62
+msgid ""
+"Device name:\n"
+"<b>{}</b>"
+msgstr ""
+
+#: src/new_device_window.py:67
+msgid "Status:"
+msgstr ""
+
+#: src/new_device_window.py:81 src/usbguard_gnome_window.py:41
+#: src/usbguard_gnome_window.py:90
+msgid "number"
+msgstr ""
+
+#: src/new_device_window.py:81 src/usbguard_gnome_window.py:41
+#: src/usbguard_gnome_window.py:90
+msgid "rule"
+msgstr ""
+
+#: src/new_device_window.py:81 src/usbguard_gnome_window.py:41
+#: src/usbguard_gnome_window.py:90
+msgid "id"
+msgstr ""
+
+#: src/new_device_window.py:81 src/usbguard_gnome_window.py:90
+msgid "serial"
+msgstr ""
+
+#: src/new_device_window.py:81 src/usbguard_gnome_window.py:41
+#: src/usbguard_gnome_window.py:90
+msgid "name"
+msgstr ""
+
+#: src/new_device_window.py:81 src/usbguard_gnome_window.py:41
+#: src/usbguard_gnome_window.py:90
+msgid "port"
+msgstr ""
+
+#: src/new_device_window.py:81 src/usbguard_gnome_window.py:41
+#: src/usbguard_gnome_window.py:90
+msgid "interface"
+msgstr ""
+
+#: src/new_device_window.py:81 src/usbguard_gnome_window.py:41
+#: src/usbguard_gnome_window.py:90
+msgid "description"
+msgstr ""
+
+#: src/new_device_window.py:151 src/usbguard_gnome_applet.py:134
+#: src/usbguard_gnome_window.py:174
+msgid "Quit"
+msgstr ""
+
+#: src/usbguard_gnome_applet.py:88
+msgid "New USB device inserted"
+msgstr ""
+
+#: src/usbguard_gnome_applet.py:108
+msgid "{} USB devices connected during absence"
+msgstr ""
+
+#: src/usbguard_gnome_applet.py:130
+msgid "Open"
+msgstr ""
+
+#: src/usbguard_gnome_applet.py:130
+msgid "Close"
+msgstr ""
+
+#: src/usbguard_gnome_window.py:45 src/usbguard_gnome_window.py:94
+msgid "USBGuard Gnome Window"
+msgstr ""
+
