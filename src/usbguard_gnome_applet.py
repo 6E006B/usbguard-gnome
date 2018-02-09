@@ -6,6 +6,7 @@ import gi
 import os
 import sys
 import signal
+import time
 
 gi.require_version('AppIndicator3', '0.1')
 # gi.require_version('Gtk', '3.0')
@@ -60,8 +61,11 @@ class USBGuardAppIndicator(object):
     notifications = {}
     screensaver_active = False
     new_devices_on_screensaver = set()
+    activate_on_screensaver = []  # devices to activate on screensaver
 
     def __init__(self):
+        self.device_policy_changed_ids = []
+
         Notify.init(APPINDICATOR_ID)
         self.indicator = AppIndicator3.Indicator.new(
             APPINDICATOR_ID,
@@ -86,20 +90,31 @@ class USBGuardAppIndicator(object):
         device: device object
         """
         print("new_device_callback({})".format(presenceEvent))
+        print("Device: {}".format(device.get_class_description_string()))
         if presenceEvent != PresenceEvent.REMOVE.value:
             if self.screensaver_active:
                 self.new_devices_on_screensaver.add(device)
             else:
-                description = device.get_class_description_string()
-                notification = Notify.Notification.new(_("New USB device inserted"), description, self.USBGUARD_ICON_PATH)
-                notification.add_action('allow', 'Allow', self.on_allow_clicked, device)
-                notification.add_action('block', 'Block', self.on_allow_clicked, device)
-                notification.add_action('default', 'default', self.on_notification_clicked, device)
-                notification.set_timeout(Notify.EXPIRES_NEVER) # TODO: maybe make configurable
-                notification.connect('closed', self.on_notification_closed)
-                notification.set_category("device.added")
-                notification.show()
-                self.notifications[notification.props.id] = notification
+                # TODO: This feature should be opt-in. Add a configuration setting for it.
+                if device.is_hid_only():
+                    # Activate screensaver
+                    notification = Notify.Notification.new("New keyboard attached", "Locking computer now. Enter your password to activate. If you did not attach a keyboard, check your computer for potentially malicious devices.", self.USBGUARD_ICON_PATH)
+                    notification.set_category("device.added")
+                    notification.show()
+                    self.activate_on_screensaver.append(device)
+                    time.sleep(20)
+                    self.screensaver_dbus.lock()
+                else:
+                    description = device.get_class_description_string()
+                    notification = Notify.Notification.new(_("New USB device inserted"), description, self.USBGUARD_ICON_PATH)
+                    notification.add_action('allow', 'Allow', self.on_allow_clicked, device)
+                    notification.add_action('block', 'Block', self.on_allow_clicked, device)
+                    notification.add_action('default', 'default', self.on_notification_clicked, device)
+                    notification.set_timeout(Notify.EXPIRES_NEVER) # TODO: maybe make configurable
+                    notification.connect('closed', self.on_notification_closed)
+                    notification.set_category("device.added")
+                    notification.show()
+                    self.notifications[notification.props.id] = notification
 
     def screensaver_active_changed_callback(self, active):
         """Monitoring screen saver status
@@ -124,6 +139,16 @@ class USBGuardAppIndicator(object):
             notification.set_category("device.added")
             notification.show()
             self.new_devices_on_screensaver = set()
+        elif self.screensaver_active:
+            # Keyboards should be activated as soon as the screensaver is on
+            # (= computer locked). That way the computer can be recovered from
+            # broken keyboards. User will have to log in, so BadUSB/BashBunny
+            # will not be an issue.
+            print("Screen saver active. Adding HID devices")
+            for device in self.activate_on_screensaver:
+                self.allow_device(device, temporary=True)
+                print("activating device: " + str(device))
+            self.activate_on_screensaver = []
 
     def run(self):
         """start the app"""
@@ -175,6 +200,15 @@ class USBGuardAppIndicator(object):
         """On open event handler"""
         self.open_window()
 
+    def allow_device(self, device, temporary = False):
+        """Allow a device.
+
+        device: Device to allow
+        temporary: only add temporary and do not store permissions
+        """
+        rule_id = self.usbguard_dbus.apply_device_policy(device.number, Rule.ALLOW, temporary)
+        self.device_policy_changed_ids.append(rule_id)
+
     def on_allow_clicked(self, notification, action_name, device):
         """Handle device allow click action
 
@@ -183,9 +217,13 @@ class USBGuardAppIndicator(object):
         device: device to allow
         """
         print("on_allow_clicked() for device {}".format(device))
-        rule_id = self.usbguard_dbus.apply_device_policy(device.number, Rule.ALLOW, False)
-        self.device_policy_changed_ids.append(rule_id)
+        self.allow_device(device)
         self.notifications[notification.props.id] = None
+
+    def block_device(self):
+        """Block a device"""
+        rule_id = self.usbguard_dbus.apply_device_policy(device.number, Rule.BLOCK, False)
+        self.device_policy_changed_ids.append(rule_id)
 
     def on_block_clicked(self, notification, action_name, device):
         """Handle device block click action
@@ -195,8 +233,7 @@ class USBGuardAppIndicator(object):
         device: device to block
         """
         print("on_block_clicked()")
-        rule_id = self.usbguard_dbus.apply_device_policy(device.number, Rule.BLOCK, False)
-        self.device_policy_changed_ids.append(rule_id)
+        self.block_device(device)
         self.notifications[notification.props.id] = None
 
     def on_notification_clicked(self, notification, action_name, device):

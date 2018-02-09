@@ -25,6 +25,13 @@ class ScreensaverDBUS(object):
         self.add_signal_receivers()
         self.screensaver_active_changed_callbacks = []
 
+    def lock(self):
+        """Lock the screen"""
+        try:
+            self.screensaver_interface.Lock()
+        except dbus.exceptions.DBusException:
+            pass   # We will not get a reply from the method
+
     def add_signal_receivers(self):
         """Connect to DBUS signals"""
         # TODO: make method private if possible
