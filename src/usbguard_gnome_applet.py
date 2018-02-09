@@ -61,6 +61,7 @@ class USBGuardAppIndicator(object):
     notifications = {}
     screensaver_active = False
     new_devices_on_screensaver = set()
+    activate_on_screensaver = []  # devices to activate on screensaver
 
     def __init__(self):
         self.device_policy_changed_ids = []
@@ -100,10 +101,9 @@ class USBGuardAppIndicator(object):
                     notification = Notify.Notification.new("New keyboard attached", "Locking computer now. Enter your password to activate. If you did not attach a keyboard, check your computer for potentially malicious devices.", self.USBGUARD_ICON_PATH)
                     notification.set_category("device.added")
                     notification.show()
+                    self.activate_on_screensaver.append(device)
                     time.sleep(20)
-
                     self.screensaver_dbus.lock()
-                    self.allow_device(device, temporary=True)
                 else:
                     description = device.get_class_description_string()
                     notification = Notify.Notification.new(_("New USB device inserted"), description, self.USBGUARD_ICON_PATH)
@@ -139,6 +139,16 @@ class USBGuardAppIndicator(object):
             notification.set_category("device.added")
             notification.show()
             self.new_devices_on_screensaver = set()
+        elif self.screensaver_active:
+            # Keyboards should be activated as soon as the screensaver is on
+            # (= computer locked). That way the computer can be recovered from
+            # broken keyboards. User will have to log in, so BadUSB/BashBunny
+            # will not be an issue.
+            print("Screen saver active. Adding HID devices")
+            for device in self.activate_on_screensaver:
+                self.allow_device(device, temporary=True)
+                print("activating device: " + str(device))
+            self.activate_on_screensaver = []
 
     def run(self):
         """start the app"""
