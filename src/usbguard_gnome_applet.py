@@ -2,6 +2,7 @@
 
 from __future__ import absolute_import, print_function, unicode_literals
 
+from dbus.exceptions import DBusException
 import gi
 import os
 import sys
@@ -146,8 +147,11 @@ class USBGuardAppIndicator(object):
             # will not be an issue.
             print("Screen saver active. Adding HID devices")
             for device in self.activate_on_screensaver:
-                self.allow_device(device, temporary=True)
                 print("activating device: " + str(device))
+                try:
+                    self.allow_device(device, temporary=True)
+                except DBusException, e:
+                    print("Device Activation failed: {}".format(e))
             self.activate_on_screensaver = []
 
     def run(self):
