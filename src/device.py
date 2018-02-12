@@ -122,7 +122,7 @@ class Device(object):
         """Return device parameter as list (for the GUI grid)"""
         return [
             self.number,
-            self.rule,
+            self.rule == 'allow',
             self.id,
             self.serial,
             self.name,
