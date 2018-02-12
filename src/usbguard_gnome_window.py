@@ -90,9 +90,8 @@ class USBGuardGnomeWindow(Gtk.ApplicationWindow):
     def on_toggled(self, widget, path):
         """Event handler if device is toggled"""
         current_value = self.devices_list_model[path][1]
-        new_current_value = not current_value
-        self.devices_list_model[path][1] = new_current_value
-        if new_current_value:
+        new_value = not current_value
+        if new_value:
             state = "on"
             rule = Rule.ALLOW
         else:
