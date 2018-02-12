@@ -2,6 +2,7 @@
 
 from __future__ import absolute_import, print_function, unicode_literals
 
+from dbus.exceptions import DBusException
 import sys
 
 import gi
@@ -98,8 +99,12 @@ class USBGuardGnomeWindow(Gtk.ApplicationWindow):
             state = "off"
             rule = Rule.BLOCK
         print("Switch was turned", state)
-        self.application.usbguard_dbus.apply_device_policy(self.devices_list_model[path][0], rule, False)
-
+        try:
+            self.application.usbguard_dbus.apply_device_policy(self.devices_list_model[path][0], rule, False)
+            self.devices_list_model[path][1] = new_value
+        except DBusException as e:
+            print("Error setting device policy: {}".format(e))
+            #TODO: force table refresh
 
     def on_row_clicked(self, tree_view, event):
         """Connects the right-click on a device entry to the event handler"""
