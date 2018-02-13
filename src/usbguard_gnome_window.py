@@ -63,6 +63,7 @@ class USBGuardGnomeWindow(Gtk.ApplicationWindow):
             self.devices_list_model.append(device.as_list())
 
         view = Gtk.TreeView(model=self.devices_list_model)
+        view.set_grid_lines(Gtk.TreeViewGridLines.HORIZONTAL)
         for i in range(len(self.DEVICES_LIST_COLUMNS)):
             if i == 1:
                 cell = Gtk.CellRendererToggle()
