@@ -136,12 +136,15 @@ class USBGuardGnomeWindow(Gtk.ApplicationWindow):
         menu.popup(None, None, None, None, event.button, event.time)
 
     def set_device_list(self, device_list):
-        print("setting new device list: {}".format(device_list))
+        """
+        Sets a new device list to be viewed in the device management window.
+
+        :param device_list: List of devices to show
+        :return: None
+        """
         self.device_list_model.clear()
         for device in device_list:
-            print(device.as_list())
             self.device_list_model.append(device.as_list())
-
 
 
 class USBGuardGnomeApplication(Gtk.Application):
@@ -162,10 +165,22 @@ class USBGuardGnomeApplication(Gtk.Application):
         self.register_presence_changes()
 
     def on_device_presence_changed(self, event, new_device):
+        """
+        Callback function to handle device presence changes.
+
+        :param event: Type of presence change
+        :param new_device: Device object of new device
+        :return: None
+        """
         device_list = self.usbguard_dbus.get_all_devices()
         self.window.set_device_list(device_list)
 
     def register_presence_changes(self):
+        """
+        Registers for device presence changes at USBGuard DBus service.
+
+        :return: None
+        """
         self.usbguard_dbus.register_device_presence_changed_callback(self.on_device_presence_changed)
 
     def do_startup(self):
