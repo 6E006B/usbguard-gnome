@@ -43,7 +43,7 @@ print('Using locale directory: {}'.format(LOCALE_DIR))
 class USBGuardGnomeWindow(Gtk.ApplicationWindow):
     """Window class to display the Application main window"""
 
-    DEVICES_LIST_COLUMNS = [
+    DEVICE_LIST_COLUMNS = [
         _('number'), _('enabled?'), _('id'), _('serial'), _('name'), _('port'), _('interface'), _('description')
     ]
 
@@ -52,22 +52,22 @@ class USBGuardGnomeWindow(Gtk.ApplicationWindow):
         self.application = app
         self.detailed = detailed
 
-    def init_devices_list(self, devices_list):
+    def init_device_list(self, device_list):
         """create the gui device list and grid
 
-        devices_list: a list of Device objects - will be displayed in the grid
+        device_list: a list of Device objects - will be displayed in the grid
         """
-        self.devices_list_model = Gtk.ListStore(int, bool, str, str, str, str, str, str)
-        for device in devices_list:
+        self.device_list_model = Gtk.ListStore(int, bool, str, str, str, str, str, str)
+        for device in device_list:
             print(device.as_list())
-            self.devices_list_model.append(device.as_list())
+            self.device_list_model.append(device.as_list())
 
-        view = Gtk.TreeView(model=self.devices_list_model)
-        view.set_grid_lines(Gtk.TreeViewGridLines.HORIZONTAL)
-        for i in range(len(self.DEVICES_LIST_COLUMNS)):
+        device_list_view = Gtk.TreeView(model=self.device_list_model)
+        device_list_view.set_grid_lines(Gtk.TreeViewGridLines.HORIZONTAL)
+        for i in range(len(self.DEVICE_LIST_COLUMNS)):
             if i == 1:
                 cell = Gtk.CellRendererToggle()
-                col = Gtk.TreeViewColumn(self.DEVICES_LIST_COLUMNS[i], cell, active=1)
+                col = Gtk.TreeViewColumn(self.DEVICE_LIST_COLUMNS[i], cell, active=1)
                 view.append_column(col)
                 cell.connect("toggled", self.on_toggled)
             else:
@@ -76,7 +76,7 @@ class USBGuardGnomeWindow(Gtk.ApplicationWindow):
                 if i == 0:
                     cell.props.weight_set = True
                     cell.props.weight = Pango.Weight.BOLD
-                col = Gtk.TreeViewColumn(self.DEVICES_LIST_COLUMNS[i], cell, text=i)
+                col = Gtk.TreeViewColumn(self.DEVICE_LIST_COLUMNS[i], cell, text=i)
                 if not self.detailed:
                     if i == 0 or i == 2 or i == 3 or i == 5 or i == 6:
                         # don't show the number, id, serial, port and interface if not in detailed view
@@ -91,7 +91,7 @@ class USBGuardGnomeWindow(Gtk.ApplicationWindow):
 
     def on_toggled(self, widget, path):
         """Event handler if device is toggled"""
-        current_value = self.devices_list_model[path][1]
+        current_value = self.device_list_model[path][1]
         new_value = not current_value
         if new_value:
             state = "on"
@@ -101,8 +101,8 @@ class USBGuardGnomeWindow(Gtk.ApplicationWindow):
             rule = Rule.BLOCK
         print("Switch was turned", state)
         try:
-            self.application.usbguard_dbus.apply_device_policy(self.devices_list_model[path][0], rule, False)
-            self.devices_list_model[path][1] = new_value
+            self.application.usbguard_dbus.apply_device_policy(self.device_list_model[path][0], rule, False)
+            self.device_list_model[path][1] = new_value
         except DBusException as e:
             print("Error setting device policy: {}".format(e))
             #TODO: force table refresh
@@ -114,9 +114,9 @@ class USBGuardGnomeWindow(Gtk.ApplicationWindow):
             # path, column = tree_view.get_cursor()
             tree_path = tree_view.get_path_at_pos(event.x, event.y)[0]
             # print("right mouse button clicked on: {}".format(model[treeiter][0]))
-            # print("iter = {}".format(self.devices_list_model[self.devices_list_model.get_iter(path)][0]))
-            print("tree_path = {}".format(self.devices_list_model[self.devices_list_model.get_iter(tree_path)][0]))
-            device_number = self.devices_list_model[self.devices_list_model.get_iter(tree_path)][0]
+            # print("iter = {}".format(self.device_list_model[self.device_list_model.get_iter(path)][0]))
+            print("tree_path = {}".format(self.device_list_model[self.device_list_model.get_iter(tree_path)][0]))
+            device_number = self.device_list_model[self.device_list_model.get_iter(tree_path)][0]
             self.show_entry_popup_menu(event, device_number)
 
     def show_entry_popup_menu(self, event, device_number):
@@ -147,8 +147,8 @@ class USBGuardGnomeApplication(Gtk.Application):
     def do_activate(self):
         """Init window"""
         self.window = USBGuardGnomeWindow(self)
-        devices_list = self.usbguard_dbus.get_all_devices()
-        self.window.init_devices_list(devices_list)
+        device_list = self.usbguard_dbus.get_all_devices()
+        self.window.init_device_list(device_list)
         self.window.show_all()
 
     def do_startup(self):
