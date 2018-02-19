@@ -51,6 +51,7 @@ class USBGuardGnomeWindow(Gtk.ApplicationWindow):
         Gtk.ApplicationWindow.__init__(self, title=_('USBGuard Gnome Window'), application=app)
         self.application = app
         self.detailed = detailed
+        self.device_list_model = None
 
     def init_device_list(self, device_list):
         """create the gui device list and grid
@@ -134,6 +135,14 @@ class USBGuardGnomeWindow(Gtk.ApplicationWindow):
         menu.show_all()
         menu.popup(None, None, None, None, event.button, event.time)
 
+    def set_device_list(self, device_list):
+        print("setting new device list: {}".format(device_list))
+        self.device_list_model.clear()
+        for device in device_list:
+            print(device.as_list())
+            self.device_list_model.append(device.as_list())
+
+
 
 class USBGuardGnomeApplication(Gtk.Application):
 
@@ -150,6 +159,14 @@ class USBGuardGnomeApplication(Gtk.Application):
         device_list = self.usbguard_dbus.get_all_devices()
         self.window.init_device_list(device_list)
         self.window.show_all()
+        self.register_presence_changes()
+
+    def on_device_presence_changed(self, event, new_device):
+        device_list = self.usbguard_dbus.get_all_devices()
+        self.window.set_device_list(device_list)
+
+    def register_presence_changes(self):
+        self.usbguard_dbus.register_device_presence_changed_callback(self.on_device_presence_changed)
 
     def do_startup(self):
         """Init the application"""
