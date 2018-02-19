@@ -68,7 +68,7 @@ class USBGuardGnomeWindow(Gtk.ApplicationWindow):
             if i == 1:
                 cell = Gtk.CellRendererToggle()
                 col = Gtk.TreeViewColumn(self.DEVICE_LIST_COLUMNS[i], cell, active=1)
-                view.append_column(col)
+                device_list_view.append_column(col)
                 cell.connect("toggled", self.on_toggled)
             else:
                 cell = Gtk.CellRendererText()
@@ -81,12 +81,12 @@ class USBGuardGnomeWindow(Gtk.ApplicationWindow):
                     if i == 0 or i == 2 or i == 3 or i == 5 or i == 6:
                         # don't show the number, id, serial, port and interface if not in detailed view
                         col.set_visible(False)
-                view.append_column(col)
+                device_list_view.append_column(col)
 
-        view.connect("button-press-event", self.on_row_clicked)
+        device_list_view.connect("button-press-event", self.on_row_clicked)
 
         grid = Gtk.Grid()
-        grid.attach(view, 0, 0, 1, 1)
+        grid.attach(device_list_view, 0, 0, 1, 1)
         self.add(grid)
 
     def on_toggled(self, widget, path):
