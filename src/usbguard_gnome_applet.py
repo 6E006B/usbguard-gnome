@@ -92,30 +92,35 @@ class USBGuardAppIndicator(object):
         """
         print("new_device_callback({})".format(presenceEvent))
         print("Device: {}".format(device.get_class_description_string()))
+        # Don't show notification upon device removal
         if presenceEvent != PresenceEvent.REMOVE.value:
-            if self.screensaver_active:
-                self.new_devices_on_screensaver.add(device)
-            else:
-                # TODO: This feature should be opt-in. Add a configuration setting for it.
-                if device.is_hid_only():
-                    # Activate screensaver
-                    notification = Notify.Notification.new("New keyboard attached", "Locking computer now. Enter your password to activate. If you did not attach a keyboard, check your computer for potentially malicious devices.", self.USBGUARD_ICON_PATH)
-                    notification.set_category("device.added")
-                    notification.show()
-                    self.activate_on_screensaver.append(device)
-                    time.sleep(20)
-                    self.screensaver_dbus.lock()
+            # Only show devices which are blocked
+            if not device.is_allowed():
+                if self.screensaver_active:
+                    self.new_devices_on_screensaver.add(device)
                 else:
-                    description = device.get_class_description_string()
-                    notification = Notify.Notification.new(_("New USB device inserted"), description, self.USBGUARD_ICON_PATH)
-                    notification.add_action('allow', 'Allow', self.on_allow_clicked, device)
-                    notification.add_action('block', 'Block', self.on_block_clicked, device)
-                    notification.add_action('default', 'default', self.on_notification_clicked, device)
-                    notification.set_timeout(Notify.EXPIRES_NEVER) # TODO: maybe make configurable
-                    notification.connect('closed', self.on_notification_closed)
-                    notification.set_category("device.added")
-                    notification.show()
-                    self.notifications[notification.props.id] = notification
+                    # TODO: This feature should be opt-in. Add a configuration setting for it.
+                    if device.is_hid_only():
+                        # Activate screensaver
+                        notification = Notify.Notification.new("New keyboard attached", "Locking computer now. Enter your password to activate. If you did not attach a keyboard, check your computer for potentially malicious devices.", self.USBGUARD_ICON_PATH)
+                        notification.set_category("device.added")
+                        notification.show()
+                        self.activate_on_screensaver.append(device)
+                        time.sleep(20)
+                        # Only perform the locking of the screen if devices have not been activated yet.
+                        if not self.usbguard_dbus.check_devices_activated(self.activate_on_screensaver):
+                            self.screensaver_dbus.lock()
+                    else:
+                        description = device.get_class_description_string()
+                        notification = Notify.Notification.new(_("New USB device inserted"), description, self.USBGUARD_ICON_PATH)
+                        notification.add_action('allow', 'Allow', self.on_allow_clicked, device)
+                        notification.add_action('block', 'Block', self.on_block_clicked, device)
+                        notification.add_action('default', 'default', self.on_notification_clicked, device)
+                        notification.set_timeout(Notify.EXPIRES_NEVER) # TODO: maybe make configurable
+                        notification.connect('closed', self.on_notification_closed)
+                        notification.set_category("device.added")
+                        notification.show()
+                        self.notifications[notification.props.id] = notification
 
     def screensaver_active_changed_callback(self, active):
         """Monitoring screen saver status
