@@ -123,6 +123,16 @@ class USBGuardDBUS(object):
         rule_id = self.devices_interface.applyDevicePolicy(device_id, rule, permanent)
         return rule_id
 
+    def check_device_activated(self, device):
+        updated_device = self.get_device(device.number)
+        return updated_device.is_allowed()
+
+    def check_devices_activated(self, device_list):
+        for device in device_list:
+            if not self.check_device_activated(device):
+                return False
+        return True
+
 
 if __name__ == "__main__":
     """Test it by getting rules and devices. Prints them"""
