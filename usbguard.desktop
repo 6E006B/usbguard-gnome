@@ -1,0 +1,17 @@
+#!/usr/bin/env xdg-open
+
+[Desktop Entry]
+Categories=System;
+Comment=
+Exec=python /opt/usbguard/src/usbguard_gnome_window.pyc
+Icon=usbguard-icon
+Keywords=USB;USBGuard;
+Name=USBGUARD
+NoDisplay=false
+Path=
+StartupNotify=true
+StartupWMClass=
+Terminal=false
+TryExec=
+Type=Application
+Version=1.0
