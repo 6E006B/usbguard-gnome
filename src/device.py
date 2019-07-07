@@ -74,14 +74,13 @@ class Device(object):
                 return True
         return False
 
-    def is_hid_only(self):
-        """Return True if device is HID"""
-        for interface in self.with_interface:
-            base_class_bytes = int(interface[:2], 16)
-            if not base_class_bytes == 0x03:
-                return False
-
-        return self.has_interface(0x03)
+    #def is_hid_only(self):
+    #    """Return True if device is HID"""
+    #    for interface in self.with_interface:
+    #        base_class_bytes = int(interface[:2], 16)
+    #        if not base_class_bytes == 0x03:
+    #            return False
+    #    return self.has_interface(0x03)
 
     def get_class_description_set(self):
         """Get class description based on interface"""
