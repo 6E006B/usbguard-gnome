@@ -113,6 +113,7 @@ class USBGuardAppIndicator(object):
                     else:
                         description = device.get_class_description_string()
                         notification = Notify.Notification.new(_("New USB device inserted"), description, self.USBGUARD_ICON_PATH)
+                notification.add_action('temp', 'Temp', self.on_temp_clicked, device)
                         notification.add_action('allow', 'Allow', self.on_allow_clicked, device)
                         notification.add_action('block', 'Block', self.on_block_clicked, device)
                         notification.add_action('default', 'default', self.on_notification_clicked, device)
@@ -209,11 +210,10 @@ class USBGuardAppIndicator(object):
         """On open event handler"""
         self.open_window()
 
-    def allow_device(self, device, temporary = False):
+    def allow_device(self, device, temporary = True):
         """Allow a device.
 
         device: Device to allow
-        temporary: only add temporary and do not store permissions
         """
         rule_id = self.usbguard_dbus.apply_device_policy(device.number, Rule.ALLOW, temporary)
         self.device_policy_changed_ids.append(rule_id)
@@ -227,6 +227,26 @@ class USBGuardAppIndicator(object):
         """
         print("on_allow_clicked() for device {}".format(device))
         self.allow_device(device)
+        self.notifications[notification.props.id] = None
+
+    def temp_device(self, device, temporary = False):
+        """Temporary allow a device.
+
+        device: Device to allow temporary
+        temporary: only add temporary and do not store permissions
+        """
+        rule_id = self.usbguard_dbus.apply_device_policy(device.number, Rule.ALLOW, temporary)
+        self.device_policy_changed_ids.append(rule_id)
+
+    def on_temp_clicked(self, notification, action_name, device):
+        """Handle device allow temporary click action
+
+        notification: notification to act on
+        action_name: not used
+        device: device to allow temporary
+        """
+        print("on_temp_clicked() for device {}".format(device))
+        self.temp_device(device)
         self.notifications[notification.props.id] = None
 
     def block_device(self, device):
