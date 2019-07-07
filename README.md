@@ -4,8 +4,22 @@
 
 ### USBGuard
 
-Requires USBGuard to run. https://usbguard.github.io/ or ```sudo apt install usbguard```.
+Requires USBGuard to run. https://usbguard.github.io/.
 Needs basic configuration after installation.
+### Installation
+
+```
+mkdir /tmp/usbguard
+cd /tmp/usbguard/
+git clone https://github.com/idnovic/usbguard-gnome.git .
+cd /tmp/usbguard/src
+python -m compileall .
+sudo mkdir /opt/usbguard
+sudo cp -r /tmp/usbguard /opt/usbguard/
+sudo cp /opt/usbguard/usbguard* /usr/share/applications/
+``` 
+Open USBGUARD or USBGUARD Applet from the menu.
+You may want to add USBGUARD Applet to the autostarting applications.
 
 
 ## Development
