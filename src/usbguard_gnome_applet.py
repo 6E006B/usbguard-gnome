@@ -56,8 +56,7 @@ class USBGuardAppIndicator(object):
     """App indicator to handle usb events"""
 
     CURRDIR = os.path.dirname(os.path.abspath(__file__))
-    USBGUARD_ICON_PATH = os.path.join(CURRDIR, 'usbguard-icon.svg')
-    # TODO: Icon is missing, find it
+    USBGUARD_ICON_PATH = os.path.join(CURRDIR, 'usbguard-icon.png')
 
     usbguard_app = None
     notifications = {}
