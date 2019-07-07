@@ -113,11 +113,11 @@ class USBGuardAppIndicator(object):
                     else:
                         description = device.get_class_description_string()
                         notification = Notify.Notification.new(_("New USB device inserted"), description, self.USBGUARD_ICON_PATH)
-                notification.add_action('temp', 'Temp', self.on_temp_clicked, device)
+                        notification.add_action('temp', 'Temp', self.on_temp_clicked, device)
                         notification.add_action('allow', 'Allow', self.on_allow_clicked, device)
                         notification.add_action('block', 'Block', self.on_block_clicked, device)
                         notification.add_action('default', 'default', self.on_notification_clicked, device)
-                notification.set_timeout(10000) # TODO: maybe make configurable
+                        notification.set_timeout(10000) # TODO: maybe make configurable
                         notification.connect('closed', self.on_notification_closed)
                         notification.set_category("device.added")
                         notification.show()
