@@ -11,7 +11,7 @@ Needs basic configuration after installation.
 ```
 mkdir /tmp/usbguard
 cd /tmp/usbguard/
-git clone https://github.com/idnovic/usbguard-gnome.git .
+git clone https://github.com/6E006B/usbguard-gnome.git .
 cd /tmp/usbguard/src
 python -m compileall .
 sudo mkdir /opt/usbguard
