@@ -36,7 +36,6 @@ print(gettext.find(APP, LOCALE_DIR))
 print('New device window using locale directory: {}'.format(LOCALE_DIR))
 
 
-
 class USBGuardNewDeviceWindow(Gtk.ApplicationWindow):
 
     def __init__(self, app, device):
