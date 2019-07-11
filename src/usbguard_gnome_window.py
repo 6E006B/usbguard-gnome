@@ -106,7 +106,7 @@ class USBGuardGnomeWindow(Gtk.ApplicationWindow):
             self.device_list_model[path][1] = new_value
         except DBusException as e:
             print("Error setting device policy: {}".format(e))
-            #TODO: force table refresh
+            # TODO: force table refresh
 
     def on_row_clicked(self, tree_view, event):
         """Connects the right-click on a device entry to the event handler"""

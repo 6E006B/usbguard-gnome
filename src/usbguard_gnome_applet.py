@@ -47,7 +47,6 @@ print(gettext.find(APP, LOCALE_DIR))
 print('Applet using locale directory: {}'.format(LOCALE_DIR))
 
 
-
 # Gdk.threads_init()
 APPINDICATOR_ID = 'org.gnome.usbguard.appindicator'
 
@@ -117,7 +116,7 @@ class USBGuardAppIndicator(object):
                         notification.add_action('allow', 'Allow', self.on_allow_clicked, device)
                         notification.add_action('block', 'Block', self.on_block_clicked, device)
                         notification.add_action('default', 'default', self.on_notification_clicked, device)
-                        notification.set_timeout(10000) # TODO: maybe make configurable
+                        notification.set_timeout(10000)  # TODO: maybe make configurable
                         notification.connect('closed', self.on_notification_closed)
                         notification.set_category("device.added")
                         notification.show()
@@ -156,7 +155,7 @@ class USBGuardAppIndicator(object):
                 print("activating device: " + str(device))
                 try:
                     self.allow_device(device, temporary=True)
-                except DBusException, e:
+                except DBusException as e:
                     print("Device Activation failed: {}".format(e))
             self.activate_on_screensaver = []
 
@@ -210,7 +209,7 @@ class USBGuardAppIndicator(object):
         """On open event handler"""
         self.open_window()
 
-    def allow_device(self, device, temporary = True):
+    def allow_device(self, device, temporary=True):
         """Allow a device.
 
         device: Device to allow
@@ -229,7 +228,7 @@ class USBGuardAppIndicator(object):
         self.allow_device(device)
         self.notifications[notification.props.id] = None
 
-    def temp_device(self, device, temporary = False):
+    def temp_device(self, device, temporary=False):
         """Temporary allow a device.
 
         device: Device to allow temporary
