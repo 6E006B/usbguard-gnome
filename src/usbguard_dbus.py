@@ -38,10 +38,9 @@ class USBGuardDBUS(object):
         self.bus = dbus.SystemBus()
 
         devices_object = self.bus.get_object('org.usbguard', '/org/usbguard/Devices')
-        self.policy_interface = dbus.Interface(devices_object, dbus_interface='org.usbguard.Policy')
-        self.signal_interface = dbus.Interface(devices_object, dbus_interface='org.usbguard.Devices')
-        usbguard_object = self.bus.get_object('org.usbguard', '/org/usbguard')
-        self.devices_interface = dbus.Interface(usbguard_object, dbus_interface='org.usbguard.Devices')
+        policy_object = self.bus.get_object('org.usbguard', '/org/usbguard/Policy')
+        self.policy_interface = dbus.Interface(policy_object, dbus_interface='org.usbguard.Policy')
+        self.devices_interface = dbus.Interface(devices_object, dbus_interface='org.usbguard.Devices')
 
         self.add_signal_receivers()
         self.device_presence_changed_callbacks = []
@@ -49,8 +48,7 @@ class USBGuardDBUS(object):
     def add_signal_receivers(self):
         """Connect to DBUS signals"""
         # TODO: make method private if possible
-
-        self.signal_interface.connect_to_signal('DevicePresenceChanged', self.on_device_presence_changed)
+        self.devices_interface.connect_to_signal('DevicePresenceChanged', self.on_device_presence_changed)
 
     def on_device_presence_changed(self, id, event, target, device_rule, attributes):
         """Central callback to call back the registered callbacks
