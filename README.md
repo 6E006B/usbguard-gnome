@@ -8,19 +8,27 @@ Requires USBGuard to run. https://usbguard.github.io/.
 Needs basic configuration after installation.
 ### Installation
 
+Check out project repository and install system-wide:
 ```
-mkdir /tmp/usbguard
-cd /tmp/usbguard/
 git clone https://github.com/6E006B/usbguard-gnome.git .
-cd /tmp/usbguard/src
-python -m compileall .
-sudo mkdir /opt/usbguard
-sudo cp -r /tmp/usbguard /opt/usbguard/
-sudo cp /opt/usbguard/usbguard* /usr/share/applications/
-``` 
-Open USBGUARD or USBGUARD Applet from the menu.
-You may want to add USBGUARD Applet to the autostarting applications.
+python -m compileall usbguard-gnome
+sudo cp -r usbguard-gnome /opt
+sudo cp /opt/usbguard-gnome/usbguard* /usr/share/applications/
+```
 
+Initialize settings:
+```
+sudo cp /opt/usbguard-gnome/src/org.gnome.usbguard.gschema.xml /usr/share/glib-2.0/schemas
+sudo glib-compile-schemas /usr/share/glib-2.0/schemas
+``` 
+
+Open `USBGuard` or `USBGuard Applet` from the menu.
+You may want to add `USBGuard Applet` to the autostarting applications.
+
+### Configuration
+
+A simple GUI solution to change the settings is dconf-editor.
+Here change the values to be found at org.gnome.usbguard.
 
 ## Development
 

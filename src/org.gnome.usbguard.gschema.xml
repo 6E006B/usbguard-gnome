@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<schemalist>
+    <enum id="org.gnome.usbguard.enum">
+        <value nick="option1" value="1"/>
+        <value nick="option2" value="2"/>
+        <value nick="option3" value="3"/>
+    </enum>
+    <schema path="/org/gnome/usbguard/" id="org.gnome.usbguard">
+        <key type="b" name="detailed-view">
+            <default>false</default>
+            <summary>Use detailed view</summary>
+            <description>Show detailed information about the connected devices.</description>
+        </key>
+        <key type="b" name="hid-screenlock">
+            <default>true</default>
+            <summary>Lock screen on HID device connection</summary>
+            <description>If a HID device is connected lock screen and enable device after timeout.</description>
+        </key>
+        <key type="i" name="hid-screenlock-timeout">
+            <range min="1" max="60"/>
+            <default>10</default>
+            <summary>Timeout after HID device connection</summary>
+            <description>The timeout after which the screen will be locked after connection of a new HID USB device.</description>
+        </key>
+        <key type="i" name="notification-timeout">
+            <range min="1" max="60"/>
+            <default>10</default>
+            <summary>Duration to show new device notification</summary>
+            <description>Duration the notification for the newly connected device is shown and make a choice.</description>
+        </key>
+        <key name="option" enum="org.gnome.usbguard.enum">
+            <default>'option1'</default>
+            <summary>Some setting requiring options</summary>
+            <description>Some options to choose from</description>
+        </key>
+    </schema>
+</schemalist>

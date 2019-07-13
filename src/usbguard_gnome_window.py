@@ -13,6 +13,8 @@ from gi.repository import Gdk, Gio, Gtk, Pango
 
 from new_device_window import USBGuardNewDeviceApplication
 from usbguard_dbus import Rule, USBGuardDBUS
+from usbguard_settings import USBGuardSettings
+
 import gettext
 import locale
 from os.path import abspath, dirname, join
@@ -47,10 +49,11 @@ class USBGuardGnomeWindow(Gtk.ApplicationWindow):
         _('number'), _('enabled?'), _('id'), _('serial'), _('name'), _('port'), _('interface'), _('description')
     ]
 
-    def __init__(self, app, detailed=False):
+    def __init__(self, app, detailed=None):
         Gtk.ApplicationWindow.__init__(self, title=_('USBGuard Gnome Window'), application=app)
         self.application = app
-        self.detailed = detailed
+        self.settings = USBGuardSettings()
+        self.detailed = detailed if detailed is not None else self.settings.get_detailed_view()
         self.device_list_model = None
 
     def init_device_list(self, device_list):
