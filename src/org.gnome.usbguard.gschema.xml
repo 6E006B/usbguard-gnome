@@ -28,10 +28,5 @@
             <summary>Duration to show new device notification</summary>
             <description>Duration the notification for the newly connected device is shown and make a choice.</description>
         </key>
-        <key name="option" enum="org.gnome.usbguard.enum">
-            <default>'option1'</default>
-            <summary>Some setting requiring options</summary>
-            <description>Some options to choose from</description>
-        </key>
     </schema>
 </schemalist>
