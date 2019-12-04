@@ -7,7 +7,7 @@
     </enum>
     <schema path="/org/gnome/usbguard/" id="org.gnome.usbguard">
         <key type="b" name="detailed-view">
-            <default>false</default>
+            <default>true</default>
             <summary>Use detailed view</summary>
             <description>Show detailed information about the connected devices.</description>
         </key>
