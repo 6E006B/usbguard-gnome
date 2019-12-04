@@ -37,10 +37,10 @@ class USBGuardDBUS(object):
         DBusGMainLoop(set_as_default=True)
         self.bus = dbus.SystemBus()
 
-        devices_object = self.bus.get_object('org.usbguard', '/org/usbguard/Devices')
-        policy_object = self.bus.get_object('org.usbguard', '/org/usbguard/Policy')
-        self.policy_interface = dbus.Interface(policy_object, dbus_interface='org.usbguard.Policy')
-        self.devices_interface = dbus.Interface(devices_object, dbus_interface='org.usbguard.Devices')
+        devices_object = self.bus.get_object('org.usbguard1', '/org/usbguard1/Devices')
+        policy_object = self.bus.get_object('org.usbguard1', '/org/usbguard1/Policy')
+        self.policy_interface = dbus.Interface(policy_object, dbus_interface='org.usbguard.Policy1')
+        self.devices_interface = dbus.Interface(devices_object, dbus_interface='org.usbguard.Devices1')
 
         self.add_signal_receivers()
         self.device_presence_changed_callbacks = []

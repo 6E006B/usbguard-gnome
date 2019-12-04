@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg:svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="61.17897pt"
+   height="61.671368pt"
+   viewBox="0 0 61.17897 61.671368"
+   version="1.1"
+   id="svg35"
+   sodipodi:docname="usbguard-icon.svg"
+   inkscape:version="0.92.4 5da689c313, 2019-01-14">
+  <svg:metadata
+     id="metadata41">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </svg:metadata>
+  <svg:defs
+     id="defs39" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1375"
+     inkscape:window-height="711"
+     id="namedview37"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:zoom="3.4471456"
+     inkscape:cx="-11.052196"
+     inkscape:cy="34.256267"
+     inkscape:window-x="440"
+     inkscape:window-y="720"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg35" />
+  <script>(function () {
+  var rand = {
+    &quot;noise&quot;: function () {
+      var SIGN = Math.random() &lt; Math.random() ? -1 : 1;
+      return Math.floor(Math.random() + SIGN * Math.random());
+    },
+    &quot;sign&quot;: function () {
+      const tmp = [-1, -1, -1, -1, -1, -1, +1, -1, -1, -1];
+      const index = Math.floor(Math.random() * tmp.length);
+      return tmp[index];
+    }
+  };
+  //
+  Object.defineProperty(HTMLElement.prototype, &quot;offsetHeight&quot;, {
+    get () {
+      const height = Math.floor(this.getBoundingClientRect().height);
+      const valid = height &amp;&amp; rand.sign() === 1;
+      const result = valid ? height + rand.noise() : height;
+      //
+      if (valid &amp;&amp; result !== height) {
+        window.top.postMessage(&quot;font-fingerprint-defender-alert&quot;, '*');
+      }
+      //
+      return result;
+    }
+  });
+  //
+  Object.defineProperty(HTMLElement.prototype, &quot;offsetWidth&quot;, {
+    get () {
+      const width = Math.floor(this.getBoundingClientRect().width);
+      const valid = width &amp;&amp; rand.sign() === 1;
+      const result = valid ? width + rand.noise() : width;
+      //
+      if (valid &amp;&amp; result !== width) {
+        window.top.postMessage(&quot;font-fingerprint-defender-alert&quot;, '*');
+      }
+      //
+      return result;
+    }
+  });
+  //
+  document.documentElement.dataset.fbscriptallow = true;
+})()</script>
+  <script>{
+    const iframes = window.top.document.querySelectorAll(&quot;iframe[sandbox]&quot;);
+    for (var i = 0; i &lt; iframes.length; i++) {
+      if (iframes[i].contentWindow) {
+        if (iframes[i].contentWindow.HTMLElement) {
+          iframes[i].contentWindow.HTMLElement.prototype.offsetWidth = HTMLElement.prototype.offsetWidth;
+          iframes[i].contentWindow.HTMLElement.prototype.offsetHeight = HTMLElement.prototype.offsetHeight;
+        }
+      }
+    }
+  }</script>
+  <script>(function () {
+  const toBlob = HTMLCanvasElement.prototype.toBlob;
+  const toDataURL = HTMLCanvasElement.prototype.toDataURL;
+  const getImageData = CanvasRenderingContext2D.prototype.getImageData;
+  //
+  var noisify = function (canvas, context) {
+    const shift = {
+      'r': Math.floor(Math.random() * 10) - 5,
+      'g': Math.floor(Math.random() * 10) - 5,
+      'b': Math.floor(Math.random() * 10) - 5,
+      'a': Math.floor(Math.random() * 10) - 5
+    };
+    //
+    const width = canvas.width, height = canvas.height;
+    const imageData = getImageData.apply(context, [0, 0, width, height]);
+    for (let i = 0; i &lt; height; i++) {
+      for (let j = 0; j &lt; width; j++) {
+        const n = ((i * (width * 4)) + (j * 4));
+        imageData.data[n + 0] = imageData.data[n + 0] + shift.r;
+        imageData.data[n + 1] = imageData.data[n + 1] + shift.g;
+        imageData.data[n + 2] = imageData.data[n + 2] + shift.b;
+        imageData.data[n + 3] = imageData.data[n + 3] + shift.a;
+      }
+    }
+    //
+    window.top.postMessage(&quot;canvas-fingerprint-defender-alert&quot;, '*');
+    context.putImageData(imageData, 0, 0);
+  };
+  //
+  Object.defineProperty(HTMLCanvasElement.prototype, &quot;toBlob&quot;, {
+    &quot;value&quot;: function () {
+      noisify(this, this.getContext(&quot;2d&quot;));
+      return toBlob.apply(this, arguments);
+    }
+  });
+  //
+  Object.defineProperty(HTMLCanvasElement.prototype, &quot;toDataURL&quot;, {
+    &quot;value&quot;: function () {
+      noisify(this, this.getContext(&quot;2d&quot;));
+      return toDataURL.apply(this, arguments);
+    }
+  });
+  //
+  Object.defineProperty(CanvasRenderingContext2D.prototype, &quot;getImageData&quot;, {
+    &quot;value&quot;: function () {
+      noisify(this.canvas, this);
+      return getImageData.apply(this, arguments);
+    }
+  });
+  //
+  document.documentElement.dataset.cbscriptallow = true;
+})()</script>
+  <script>{
+    const iframes = window.top.document.querySelectorAll(&quot;iframe[sandbox]&quot;);
+    for (var i = 0; i &lt; iframes.length; i++) {
+      if (iframes[i].contentWindow) {
+        if (iframes[i].contentWindow.CanvasRenderingContext2D) {
+          iframes[i].contentWindow.CanvasRenderingContext2D.prototype.getImageData = CanvasRenderingContext2D.prototype.getImageData;
+        }
+        if (iframes[i].contentWindow.HTMLCanvasElement) {
+          iframes[i].contentWindow.HTMLCanvasElement.prototype.toBlob = HTMLCanvasElement.prototype.toBlob;
+          iframes[i].contentWindow.HTMLCanvasElement.prototype.toDataURL = HTMLCanvasElement.prototype.toDataURL;
+        }
+      }
+    }
+  }</script>
+  <script>(function () {
+  const context = {
+    &quot;BUFFER&quot;: null,
+    &quot;getChannelData&quot;: function (e) {
+      const getChannelData = e.prototype.getChannelData;
+      Object.defineProperty(e.prototype, &quot;getChannelData&quot;, {
+        &quot;value&quot;: function () {
+          const results_1 = getChannelData.apply(this, arguments);
+          if (context.BUFFER !== results_1) {
+            context.BUFFER = results_1;
+            window.top.postMessage(&quot;audiocontext-fingerprint-defender-alert&quot;, '*');
+            for (var i = 0; i &lt; results_1.length; i += 100) {
+              let index = Math.floor(Math.random() * i);
+              results_1[index] = results_1[index] + Math.random() * 0.0000001;
+            }
+          }
+          //
+          return results_1;
+        }
+      });
+    },
+    &quot;createAnalyser&quot;: function (e) {
+      const createAnalyser = e.prototype.__proto__.createAnalyser;
+      Object.defineProperty(e.prototype.__proto__, &quot;createAnalyser&quot;, {
+        &quot;value&quot;: function () {
+          const results_2 = createAnalyser.apply(this, arguments);
+          const getFloatFrequencyData = results_2.__proto__.getFloatFrequencyData;
+          Object.defineProperty(results_2.__proto__, &quot;getFloatFrequencyData&quot;, {
+            &quot;value&quot;: function () {
+              window.top.postMessage(&quot;audiocontext-fingerprint-defender-alert&quot;, '*');
+              const results_3 = getFloatFrequencyData.apply(this, arguments);
+              for (var i = 0; i &lt; arguments[0].length; i += 100) {
+                let index = Math.floor(Math.random() * i);
+                arguments[0][index] = arguments[0][index] + Math.random() * 0.1;
+              }
+              //
+              return results_3;
+            }
+          });
+          //
+          return results_2;
+        }
+      });
+    }
+  };
+  //
+  context.getChannelData(AudioBuffer);
+  context.createAnalyser(AudioContext);
+  context.getChannelData(OfflineAudioContext);
+  context.createAnalyser(OfflineAudioContext);
+  document.documentElement.dataset.acxscriptallow = true;
+})()</script>
+  <script>{
+    const iframes = window.top.document.querySelectorAll(&quot;iframe[sandbox]&quot;);
+    for (var i = 0; i &lt; iframes.length; i++) {
+      if (iframes[i].contentWindow) {
+        if (iframes[i].contentWindow.AudioBuffer) {
+          if (iframes[i].contentWindow.AudioBuffer.prototype) {
+            if (iframes[i].contentWindow.AudioBuffer.prototype.getChannelData) {
+              iframes[i].contentWindow.AudioBuffer.prototype.getChannelData = AudioBuffer.prototype.getChannelData;
+            }
+          }
+        }
+
+        if (iframes[i].contentWindow.AudioContext) {
+          if (iframes[i].contentWindow.AudioContext.prototype) {
+            if (iframes[i].contentWindow.AudioContext.prototype.__proto__) {
+              if (iframes[i].contentWindow.AudioContext.prototype.__proto__.createAnalyser) {
+                iframes[i].contentWindow.AudioContext.prototype.__proto__.createAnalyser = AudioContext.prototype.__proto__.createAnalyser;
+              }
+            }
+          }
+        }
+
+        if (iframes[i].contentWindow.OfflineAudioContext) {
+          if (iframes[i].contentWindow.OfflineAudioContext.prototype) {
+            if (iframes[i].contentWindow.OfflineAudioContext.prototype.__proto__) {
+              if (iframes[i].contentWindow.OfflineAudioContext.prototype.__proto__.createAnalyser) {
+                iframes[i].contentWindow.OfflineAudioContext.prototype.__proto__.createAnalyser = OfflineAudioContext.prototype.__proto__.createAnalyser;
+              }
+            }
+          }
+        }
+
+        if (iframes[i].contentWindow.OfflineAudioContext) {
+          if (iframes[i].contentWindow.OfflineAudioContext.prototype) {
+            if (iframes[i].contentWindow.OfflineAudioContext.prototype.__proto__) {
+              if (iframes[i].contentWindow.OfflineAudioContext.prototype.__proto__.getChannelData) {
+                iframes[i].contentWindow.OfflineAudioContext.prototype.__proto__.getChannelData = OfflineAudioContext.prototype.__proto__.getChannelData;
+              }
+            }
+          }
+        }
+      }
+    }
+  }</script>
+  <svg:g
+     id="g830"
+     transform="translate(-0.69250319,-0.6618593)">
+    <svg:path
+       style="fill:#0c212e;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:6.83274794;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:0.94117647"
+       d="M 7.9614575,15.662815 C 8.0298538,32.574896 13.563478,48.963711 31.90172,55.078736 49.292612,47.250273 54.993815,32.711697 54.55947,15.720956"
+       id="path18"
+       inkscape:connector-curvature="0" />
+    <svg:path
+       style="fill:#ffffff;fill-opacity:0.94117647;fill-rule:nonzero;stroke:#ffffff;stroke-width:4.6060977;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:0.94117647"
+       d="M 6.9457061,18.734008 C 5.0065447,6.1380136 21.91179,6.6681193 31.176672,6.8870016 c 9.261462,0.2154625 25.7392,-1.5595372 24.52509,11.8196464"
+       id="path20"
+       inkscape:connector-curvature="0" />
+    <svg:path
+       style="fill:#354c57;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.87552917"
+       d="m 27.383822,9.9376684 h 3.485017 v 2.8386296 h -3.485017 z m 0,0"
+       id="path22"
+       inkscape:connector-curvature="0" />
+    <svg:path
+       style="fill:#354c57;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.87552917"
+       d="m 32.520717,9.9855485 h 3.485016 v 2.8352095 h -3.485016 z m 0,0"
+       id="path24"
+       inkscape:connector-curvature="0" />
+    <svg:path
+       style="fill:#0c212e;fill-opacity:1;fill-rule:nonzero;stroke:#0c212e;stroke-width:2.35366654;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1"
+       d="m 18.553313,8.463638 h 25.43824 V 18.90843 h -25.43824 z m 0,0"
+       id="path26"
+       inkscape:connector-curvature="0" />
+    <svg:path
+       style="fill:#ffffff;fill-opacity:0.94117647;fill-rule:nonzero;stroke:#ffffff;stroke-width:1.40702856;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:0.94117647"
+       d="m 25.625951,10.905545 h 4.018544 v 3.437137 h -4.018544 z m 0,0"
+       id="path28"
+       inkscape:connector-curvature="0" />
+    <svg:path
+       style="fill:#ffffff;fill-opacity:0.94117647;fill-rule:nonzero;stroke:#ffffff;stroke-width:0.76433021;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:0.94117647"
+       d="M 43.143338,33.101562 V 32.557776 H 28.59109 v 3.847538 h 9.220414 c -1.207272,2.465845 -3.618396,3.909101 -6.539106,3.909101 -4.370806,0 -7.715599,-3.276394 -7.715599,-7.513816 0,-4.179283 3.074611,-7.544596 7.472776,-7.544596 2.592387,0 4.729908,1.02259 6.118442,2.944648 h 4.84961 c -1.446675,-3.998019 -6.026102,-6.911889 -10.875711,-6.911889 -6.508326,0 -11.72388,5.078752 -11.72388,11.450276 0,6.491225 5.273694,11.542616 12.113764,11.542616 6.569887,0 11.631538,-5.140312 11.631538,-11.180092"
+       id="path30"
+       inkscape:connector-curvature="0" />
+    <svg:path
+       style="fill:#ffffff;fill-opacity:0.94117647;fill-rule:nonzero;stroke:#ffffff;stroke-width:1.40702856;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:0.94117647"
+       d="m 32.896951,10.857664 h 4.021965 v 3.440557 h -4.021965 z m 0,0"
+       id="path32"
+       inkscape:connector-curvature="0" />
+  </svg:g>
+</svg:svg>
