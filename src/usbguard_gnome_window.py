@@ -46,7 +46,7 @@ class USBGuardGnomeWindow(Gtk.ApplicationWindow):
     """Window class to display the Application main window"""
 
     DEVICE_LIST_COLUMNS = [
-        _('number'), _('enabled?'), _('id'), _('serial'), _('name'), _('port'), _('interface'), _('description')
+        _('number'), _('enabled?'), _('id'), _('serial'), _('name'), _('port'), _('interface'), _('description'), _('type')
     ]
 
     def __init__(self, app, detailed=None):
@@ -61,7 +61,7 @@ class USBGuardGnomeWindow(Gtk.ApplicationWindow):
 
         device_list: a list of Device objects - will be displayed in the grid
         """
-        self.device_list_model = Gtk.ListStore(int, bool, str, str, str, str, str, str)
+        self.device_list_model = Gtk.ListStore(int, bool, str, str, str, str, str, str, str)
         for device in device_list:
             print(device.as_list())
             self.device_list_model.append(device.as_list())

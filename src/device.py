@@ -35,7 +35,7 @@ class Device(object):
         0xFF: "Vendor-specific",
     }
 
-    def __init__(self, number, rule, id, serial, name, hash, parent_hash, via_port, with_interface):
+    def __init__(self, number, rule, id, serial, name, hash, parent_hash, via_port, with_interface, with_connect_type):
         """Init the class
 
         number: USBGuard device number
@@ -47,6 +47,7 @@ class Device(object):
         parent_hash: USBGuard parent hash of the device
         via_port: usb port it is connected to
         with_interface: device interface ("type of device" Class:Subclass:Protocol)
+        with_connect_type: Type of interface, hardwired or hotplug
         """
 
         self.number = number
@@ -60,6 +61,7 @@ class Device(object):
         self.with_interface = with_interface
         if not isinstance(self.with_interface, list):
             self.with_interface = [self.with_interface]
+        self.with_connect_type = with_connect_type
 
     def has_interface(self, interface_class):
         """
@@ -129,6 +131,7 @@ class Device(object):
             self.via_port,
             "\n".join(self.get_interfaces()),
             self.get_class_description_string(),
+            self.with_connect_type,
         ]
 
     # NOTICE: The number is explicitly not part of the comparison here. This
@@ -147,7 +150,8 @@ class Device(object):
                     self.hash == other.hash and
                     self.parent_hash == other.parent_hash and
                     self.via_port == other.via_port and
-                    self.with_interface == other.with_interface
+                    self.with_interface == other.with_interface and
+                    self.with_connect_type == other.with_connect_type
             ):
                 equal = True
         return equal
@@ -167,7 +171,8 @@ class Device(object):
             hash(self.hash) ^
             hash(self.parent_hash) ^
             hash(self.via_port) ^
-            hash(tuple(self.with_interface))
+            hash(tuple(self.with_interface)) ^
+            hash(self.with_connect_type)
         )
 
     @staticmethod
