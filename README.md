@@ -21,7 +21,7 @@ Python:
 
 Check out project repository and install system-wide:
 ```
-git clone https://github.com/6E006B/usbguard-gnome.git .
+git clone https://github.com/6E006B/usbguard-gnome.git
 python -m compileall usbguard-gnome
 sudo cp -r usbguard-gnome /opt
 sudo cp /opt/usbguard-gnome/usbguard* /usr/share/applications/
