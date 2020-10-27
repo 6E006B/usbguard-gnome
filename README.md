@@ -6,6 +6,17 @@
 
 Requires USBGuard to run. https://usbguard.github.io/.
 Needs basic configuration after installation.
+
+### Dependencies
+
+Debian:
+
+```sudo apt-get install gir1.2-appindicator3-0.1 python-gobject```
+
+Python:
+
+```pip install pygobject pyparsing```
+
 ### Installation
 
 Check out project repository and install system-wide:
