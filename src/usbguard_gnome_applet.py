@@ -170,10 +170,10 @@ class USBGuardAppIndicator(object):
         """Create the menu"""
         menu = Gtk.Menu()
         open_text = _('Open') if self.usbguard_app is None else _('Close')
-        item_open = Gtk.MenuItem(open_text)
+        item_open = Gtk.MenuItem(label=open_text)
         item_open.connect('activate', self.on_open)
         menu.append(item_open)
-        item_quit = Gtk.MenuItem(_('Quit'))
+        item_quit = Gtk.MenuItem(label=_('Quit'))
         item_quit.connect('activate', self.on_quit)
         menu.append(item_quit)
         menu.show_all()
