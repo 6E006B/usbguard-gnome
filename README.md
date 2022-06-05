@@ -66,7 +66,11 @@ Two bash scripts support I18N:
 
 #### extract_strings.sh
 
-Will extract strings in python code into a *.pot* file
+Will extract strings in python code into a *.pot* file and create new .po files
+
+#### update_strings.sh
+
+Will extract strings in python code into a *.pot* file and merge into existing .po files
 
 #### generate_mo.sh
 
