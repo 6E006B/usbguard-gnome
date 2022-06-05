@@ -103,7 +103,7 @@ class USBGuardAppIndicator(object):
                 else:
                     if self.settings.get_hid_screenlock() and device.is_hid_only():
                         # Activate screensaver
-                        notification = Notify.Notification.new("New keyboard attached", "Locking computer now. Enter your password to activate. If you did not attach a keyboard, check your computer for potentially malicious devices.", self.USBGUARD_ICON_PATH)
+                        notification = Notify.Notification.new(_("New keyboard attached"), _("Locking computer now. Enter your password to activate. If you did not attach a keyboard, check your computer for potentially malicious devices."), self.USBGUARD_ICON_PATH)
                         notification.set_category("device.added")
                         notification.show()
                         self.activate_on_screensaver.append(device)
