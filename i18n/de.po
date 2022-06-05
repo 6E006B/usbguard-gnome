@@ -7,103 +7,134 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2018-01-08 17:08+0100\n"
+"POT-Creation-Date: 2022-06-05 23:02+0200\n"
 "PO-Revision-Date: 2018-01-08 17:08+0100\n"
 "Last-Translator: Thorsten Sick <thorsten.sick@email.de>\n"
 "Language-Team: German\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.4.0\n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/new_device_window.py:45 src/new_device_window.py:90
+#: src/new_device_window.py:50 src/new_device_window.py:95
 msgid "New USB device"
 msgstr "Neues USB Gerät"
 
-#: src/new_device_window.py:54
+#: src/new_device_window.py:59
 msgid "<big><b>New USB Device inserted</b></big>"
 msgstr "<big><b>Neues USB Gerät hinzugefügt</b></big>"
 
-#: src/new_device_window.py:57
+#: src/new_device_window.py:62
 msgid ""
 "Device type:\n"
 "<b>{}</b>"
-msgstr "Gerät Typ:\n"
+msgstr ""
+"Gerät Typ:\n"
 "<b>{}</b>"
 
-#: src/new_device_window.py:62
+#: src/new_device_window.py:67
 msgid ""
 "Device name:\n"
 "<b>{}</b>"
-msgstr "Gerät Name:\n"
+msgstr ""
+"Gerät Name:\n"
 "<b>{}<b>"
 
-#: src/new_device_window.py:67
+#: src/new_device_window.py:72
 msgid "Status:"
 msgstr "Status:"
 
-#: src/new_device_window.py:81 src/usbguard_gnome_window.py:41
-#: src/usbguard_gnome_window.py:90
+#: src/new_device_window.py:86 src/usbguard_gnome_window.py:49
 msgid "number"
 msgstr "Nummer"
 
-#: src/new_device_window.py:81 src/usbguard_gnome_window.py:41
-#: src/usbguard_gnome_window.py:90
-msgid "rule"
-msgstr "Regel"
+#: src/new_device_window.py:86 src/usbguard_gnome_window.py:49
+msgid "enabled?"
+msgstr "Aktiviert?"
 
-#: src/new_device_window.py:81 src/usbguard_gnome_window.py:41
-#: src/usbguard_gnome_window.py:90
+#: src/new_device_window.py:86 src/usbguard_gnome_window.py:49
 msgid "id"
 msgstr "Id"
 
-#: src/new_device_window.py:81 src/usbguard_gnome_window.py:90
+#: src/new_device_window.py:86 src/usbguard_gnome_window.py:49
 msgid "serial"
 msgstr "Seriennummer"
 
-#: src/new_device_window.py:81 src/usbguard_gnome_window.py:41
-#: src/usbguard_gnome_window.py:90
+#: src/new_device_window.py:86 src/usbguard_gnome_window.py:49
 msgid "name"
 msgstr "Name"
 
-#: src/new_device_window.py:81 src/usbguard_gnome_window.py:41
-#: src/usbguard_gnome_window.py:90
+#: src/new_device_window.py:86 src/usbguard_gnome_window.py:49
 msgid "port"
 msgstr "Port"
 
-#: src/new_device_window.py:81 src/usbguard_gnome_window.py:41
-#: src/usbguard_gnome_window.py:90
+#: src/new_device_window.py:86 src/usbguard_gnome_window.py:49
 msgid "interface"
 msgstr "Interface"
 
-#: src/new_device_window.py:81 src/usbguard_gnome_window.py:41
-#: src/usbguard_gnome_window.py:90
+#: src/new_device_window.py:86 src/usbguard_gnome_window.py:49
 msgid "description"
 msgstr "Beschreibung"
 
-#: src/new_device_window.py:151 src/usbguard_gnome_applet.py:134
-#: src/usbguard_gnome_window.py:174
+#: src/new_device_window.py:86 src/usbguard_gnome_window.py:49
+msgid "type"
+msgstr "Typ"
+
+#: src/new_device_window.py:156 src/usbguard_gnome_applet.py:176
+#: src/usbguard_gnome_window.py:196
 msgid "Quit"
 msgstr "Beenden"
 
-#: src/usbguard_gnome_applet.py:88
+#: src/usbguard_gnome_applet.py:106
+msgid "New keyboard attached"
+msgstr "Neue Tastatur angeschlossen"
+
+#: src/usbguard_gnome_applet.py:106
+msgid ""
+"Locking computer now. Enter your password to activate. If you did not attach "
+"a keyboard, check your computer for potentially malicious devices."
+msgstr ""
+"Sperre den Computer jetzt. Gib dein Passwort ein zum aktivieren. Wenn du "
+"keine Tastatur angeschlossen hast, ueberpruefe deinen Computer auf "
+"unerwuenschte Geräte."
+
+#: src/usbguard_gnome_applet.py:116
 msgid "New USB device inserted"
 msgstr "Neues USB Gerät hinzugefügt"
 
-#: src/usbguard_gnome_applet.py:108
+#: src/usbguard_gnome_applet.py:117
+msgid "Temporary"
+msgstr "Temporär"
+
+#: src/usbguard_gnome_applet.py:118
+msgid "Allow"
+msgstr "Erlauben"
+
+#: src/usbguard_gnome_applet.py:119
+msgid "Block"
+msgstr "Blockieren"
+
+#: src/usbguard_gnome_applet.py:120
+msgid "default"
+msgstr "Vorgabe"
+
+#: src/usbguard_gnome_applet.py:137
 msgid "{} USB devices connected during absence"
 msgstr "{} USB Gerät während Abwesenheit hinzugefügt"
 
-#: src/usbguard_gnome_applet.py:130
+#: src/usbguard_gnome_applet.py:172
 msgid "Open"
 msgstr "Öffnen"
 
-#: src/usbguard_gnome_applet.py:130
+#: src/usbguard_gnome_applet.py:172
 msgid "Close"
 msgstr "Schließen"
 
-#: src/usbguard_gnome_window.py:45 src/usbguard_gnome_window.py:94
+#: src/usbguard_gnome_window.py:53
 msgid "USBGuard Gnome Window"
 msgstr "USBGuard Gnome Fenster"
+
+#~ msgid "rule"
+#~ msgstr "Regel"
