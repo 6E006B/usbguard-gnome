@@ -41,6 +41,23 @@ You may want to add `USBGuard Applet` to the autostarting applications.
 A simple GUI solution to change the settings is dconf-editor.
 Here change the values to be found at org.gnome.usbguard.
 
+#### DBus PolicyKit Authentication
+
+The default PolicyKit configuration of USBGuard will require the authentication for most interactions.
+To permit actions for the local active user, who is member of the `plugdev` group, create an appropriate configuration in `/etc/polkit-1/localauthority.conf.d/52-usbguard.pkla` (for Debian):
+```
+[Allow active user in plugdev group to control USBGuard]
+Action=org.usbguard.Policy1.appendRule;org.usbguard.Policy1.removeRule;org.usbguard.Devices1.applyDevicePolicy;org.usbguard1.setParameter
+Identity=unix-group:plugdev
+ResultActive=yes
+```
+
+To require authentication, but have it cached for a short while use `ResultActive=auth_self_keep` instead of `ResultActive=yes`.
+
+Alternatively you can change the usbguard policy directly (`/usr/share/polkit-1/actions/org.usbguard1.policy`) and change `auth_admin` to `yes` or `auth_self_keep`, depending on your preference.
+
+After changing the policy, restart polkit to use the new version, e.g.: `systemctl restart polkit.service`
+
 ## Development
 
 ### Internationalisation (I18N)
