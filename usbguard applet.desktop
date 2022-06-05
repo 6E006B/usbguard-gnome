@@ -3,7 +3,7 @@
 [Desktop Entry]
 Categories=System;
 Comment=
-Exec=python /opt/usbguard/src/usbguard_gnome_applet.pyc
+Exec=python /opt/usbguard-gnome/src/usbguard_gnome_applet.py
 Icon=usbguard-icon
 Keywords=USB;USBGuard;
 Name=USBGuard Applet
